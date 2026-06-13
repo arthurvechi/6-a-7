@@ -7,15 +7,16 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #121212; color: #fafafa; padding: 20px; overflow-x: hidden; }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2a2a2a; padding-bottom: 15px; margin-bottom: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2a2a2a; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .logo h1 { font-size: 26px; color: #d4af37; letter-spacing: 2px; }
         .logo p { font-size: 11px; color: #888; text-transform: uppercase; }
-        .controls { display: flex; gap: 15px; align-items: center; }
+        .controls { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
         select, button { background-color: #1e1e1e; color: #fafafa; border: 1px solid #d4af37; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; transition: 0.2s; font-weight: bold; }
         button:hover { background-color: #d4af37; color: #121212; }
         button:disabled { opacity: 0.3; cursor: not-allowed; border-color: #555; background: #1e1e1e; color: #555; }
         
-        .main-container { display: grid; grid-template-columns: 320px 1fr 320px; gap: 20px; height: calc(100vh - 100px); min-height: 650px; }
+        /* Layout Principal Responsivo */
+        .main-container { display: grid; grid-template-columns: 320px 1fr 320px; gap: 20px; height: calc(100vh - 120px); min-height: 650px; }
         
         /* DRAFT UI */
         .left-panel { background-color: #1e1e1e; border-radius: 8px; border: 1px solid #2a2a2a; padding: 15px; display: flex; flex-direction: column; gap: 15px; overflow: hidden; }
@@ -25,7 +26,7 @@
         .drawn-card p { font-size: 12px; color: #aaa; margin-bottom: 4px; }
         .drawn-card .style-tag { font-size: 11px; color: #d4af37; font-style: italic; font-weight: bold; }
         
-        .player-list-wrap { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+        .player-list-wrap { flex-grow: 1; overflow-y: auto; padding-right: 5px; min-height: 200px; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #151515; border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
@@ -41,7 +42,7 @@
         .player-pos { font-size: 11px; color: #aaa; margin-top: 1px; }
         .player-ovr { font-size: 15px; font-weight: bold; color: #d4af37; }
         
-        .center-panel { background-color: #151515; border-radius: 8px; padding: 10px; display: flex; justify-content: center; align-items: center; position: relative; border: 1px solid #2a2a2a; }
+        .center-panel { background-color: #151515; border-radius: 8px; padding: 10px; display: flex; justify-content: center; align-items: center; position: relative; border: 1px solid #2a2a2a; min-height: 450px; }
         .field { width: 100%; height: 100%; background-color: #1b5e20; border-radius: 6px; border: 3px solid #ffffff33; position: relative; overflow: hidden; }
         .field-line { position: absolute; border: 2px solid #ffffff1a; }
         .field-midline { top: 50%; left: 0; width: 100%; height: 0; transform: translateY(-50%); }
@@ -49,12 +50,12 @@
         .field-penalty-top { top: 0; left: 50%; width: 200px; height: 70px; border-top: none; transform: translateX(-50%); }
         .field-penalty-bottom { bottom: 0; left: 50%; width: 200px; height: 70px; border-bottom: none; transform: translateX(-50%); }
         
-        .slot { position: absolute; width: 55px; height: 55px; border-radius: 50%; border: 2px dashed #ffffffaa; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; background-color: #00000044; }
+        .slot { position: absolute; width: 52px; height: 55px; border-radius: 50%; border: 2px dashed #ffffffaa; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; background-color: #00000044; }
         .slot:hover, .slot.active { border-color: #d4af37; background-color: #00000077; box-shadow: 0 0 10px #d4af3744; }
-        .slot-pos { font-size: 12px; font-weight: bold; color: #fff; }
-        .slot-name { font-size: 9px; color: #ffeb3b; text-align: center; max-width: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: bold; text-transform: uppercase; }
+        .slot-pos { font-size: 11px; font-weight: bold; color: #fff; }
+        .slot-name { font-size: 9px; color: #ffeb3b; text-align: center; max-width: 48px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: bold; text-transform: uppercase; }
         .slot.filled { border-style: solid; border-color: #d4af37; background-color: #1e1e1e; }
-        .slot.filled .slot-pos { color: #d4af37; font-size: 10px; }
+        .slot.filled .slot-pos { color: #d4af37; font-size: 9px; }
         
         .right-panel { background-color: #1e1e1e; border-radius: 8px; border: 1px solid #2a2a2a; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         .box-score-header { display: flex; justify-content: space-between; font-size: 14px; border-bottom: 1px solid #2a2a2a; padding-bottom: 8px; color: #888; font-weight: bold; }
@@ -65,61 +66,57 @@
         .bar-fill { height: 100%; width: 0%; background-color: #d4af37; transition: width 0.3s; }
         .bar-val { font-weight: bold; width: 24px; text-align: right; color: #d4af37; }
         
-        .lineup-checklist { flex-grow: 1; overflow-y: auto; font-size: 13px; padding-right: 5px;}
+        .lineup-checklist { flex-grow: 1; overflow-y: auto; font-size: 13px; padding-right: 5px; min-height: 150px; }
         .checklist-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #2a2a2a; }
-        .checklist-item .name { color: #aaa; text-transform: uppercase;}
+        .checklist-item .name { color: #aaa; text-transform: uppercase; }
         .checklist-item.filled .name { color: #fff; font-weight: bold; }
         
-        #btn-simulate { width: 100%; padding: 14px; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; display: none; margin-top: auto; background: #d4af37; color: #121212; }
+        #btn-simulate { width: 100%; padding: 14px; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; display: none; margin-top: auto; background: #d4af37; color: #121212; border: none; border-radius: 4px; cursor: pointer; }
         
         .popup-pos-select { display: none; position: absolute; background: #252525; border: 1px solid #d4af37; padding: 10px; border-radius: 6px; z-index: 50; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .popup-pos-select p { font-size: 12px; margin-bottom: 8px; color: #aaa; text-transform: uppercase; font-weight: bold;}
-        .popup-pos-buttons { display: flex; gap: 8px; flex-wrap: wrap;}
+        .popup-pos-select p { font-size: 12px; margin-bottom: 8px; color: #aaa; text-transform: uppercase; font-weight: bold; }
+        .popup-pos-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
         .popup-pos-buttons button { padding: 4px 8px; font-size: 12px; }
 
         /* THE RUN - SIMULATION UI */
-        #simulation-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #121212; z-index: 100; overflow-y: auto; padding: 40px; }
+        #simulation-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #121212; z-index: 100; overflow-y: auto; padding: 20px; }
         .sim-container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
         
-        .sim-header { border-bottom: 3px solid #d4af37; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .sim-header { border-bottom: 3px solid #d4af37; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px; }
         .sim-header h1 { font-size: 32px; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
         .sim-header p { color: #888; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
-        .sim-controls button { background: #1e1e1e; color: #d4af37; border: 1px solid #d4af37; }
-        .sim-controls button:hover { background: #d4af37; color: #121212; }
 
-        .btn-reveal-match { background: #cc0000; color: #fff; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 4px; display: inline-block; max-width: 300px; text-align: center; }
+        .btn-reveal-match { background: #cc0000; color: #fff; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 4px; display: inline-block; width: 100%; max-width: 300px; text-align: center; margin-top: 10px; }
         .btn-reveal-match:hover { background: #a30000; }
 
-        /* Estilo da Tabela e das Partidas (Inspirado no 7a0) */
         .match-card { background: transparent; border-bottom: 1px solid #2a2a2a; margin-bottom: 5px; padding-bottom: 10px; }
-        .match-main-row { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; font-size: 18px; text-transform: uppercase; font-weight: bold; }
+        .match-main-row { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; font-size: 16px; text-transform: uppercase; font-weight: bold; flex-wrap: wrap; gap: 10px; }
         
-        .match-info-left { display: flex; align-items: center; gap: 20px; width: 60%; }
-        .match-stage { font-size: 12px; color: #888; width: 80px; letter-spacing: 1px; }
-        .match-opponent { font-size: 22px; color: #fff; display: flex; align-items: center; gap: 10px; }
-        .match-opponent span { font-size: 12px; color: #888; } /* o 'vs AT' */
+        .match-info-left { display: flex; align-items: center; gap: 15px; width: 60%; min-width: 200px; }
+        .match-stage { font-size: 11px; color: #888; width: 80px; letter-spacing: 1px; }
+        .match-opponent { font-size: 18px; color: #fff; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+        .match-opponent span { font-size: 11px; color: #888; }
 
-        .match-info-right { display: flex; align-items: center; gap: 15px; width: 40%; justify-content: flex-end; }
-        .match-score { font-size: 24px; color: #fff; letter-spacing: 2px; font-family: monospace; }
-        .match-timer { font-size: 14px; color: #d4af37; background: #252525; padding: 4px 8px; border-radius: 4px; min-width: 45px; text-align: center; border: 1px solid #d4af37; }
-        .match-timer.ended { background: transparent; border: none; color: #4caf50; font-size: 18px; } /* Checkmark verde */
-        .match-timer.ended-loss { background: transparent; border: none; color: #cc0000; font-size: 18px; } /* X vermelho */
+        .match-info-right { display: flex; align-items: center; gap: 15px; width: 35%; justify-content: flex-end; }
+        .match-score { font-size: 22px; color: #fff; letter-spacing: 2px; font-family: monospace; }
+        .match-timer { font-size: 13px; color: #d4af37; background: #252525; padding: 4px 8px; border-radius: 4px; min-width: 45px; text-align: center; border: 1px solid #d4af37; }
+        .match-timer.ended { background: transparent; border: none; color: #4caf50; font-size: 18px; }
+        .match-timer.ended-loss { background: transparent; border: none; color: #cc0000; font-size: 18px; }
 
-        .match-timeline { padding-left: 100px; display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
-        .timeline-event { display: flex; gap: 15px; align-items: center; padding: 4px 10px; font-size: 14px; text-transform: uppercase; font-weight: bold; animation: slideIn 0.3s ease-out forwards; }
+        .match-timeline { padding-left: 20px; display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
+        .timeline-event { display: flex; gap: 12px; align-items: center; padding: 4px 10px; font-size: 13px; text-transform: uppercase; font-weight: bold; animation: slideIn 0.3s ease-out forwards; }
         
-        .event-user { border-left: 3px solid #4caf50; color: #fff; } /* Verde para os seus gols */
-        .event-opp { border-left: 3px solid #cc0000; color: #fff; }  /* Vermelho para os gols sofridos */
-        .event-time { color: #888; font-size: 12px; width: 30px; text-align: right; }
+        .event-user { border-left: 3px solid #4caf50; color: #fff; }
+        .event-opp { border-left: 3px solid #cc0000; color: #fff; }
+        .event-time { color: #888; font-size: 11px; width: 30px; text-align: right; }
 
-        .match-summary { padding-left: 100px; font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 15px; display: none; }
+        .match-summary { padding-left: 20px; font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 15px; display: none; }
         
-        /* Grid para o painel lateral de classificação */
-        .simulation-grid { display: grid; grid-template-columns: 1fr 300px; gap: 40px; margin-top: 20px; }
+        .simulation-grid { display: grid; grid-template-columns: 1fr 300px; gap: 30px; margin-top: 20px; }
         
         .standings-panel { background: #1e1e1e; border: 1px solid #2a2a2a; border-radius: 8px; padding: 20px; height: fit-content; }
-        .standings-panel h3 { font-size: 14px; text-transform: uppercase; color: #d4af37; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;}
-        .standings-table { width: 100%; border-collapse: collapse; font-size: 13px; text-transform: uppercase; }
+        .standings-panel h3 { font-size: 13px; text-transform: uppercase; color: #d4af37; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;}
+        .standings-table { width: 100%; border-collapse: collapse; font-size: 12px; text-transform: uppercase; }
         .standings-table th, .standings-table td { padding: 8px 4px; text-align: center; }
         .standings-table th { color: #888; border-bottom: 1px solid #333; }
         .standings-table td.t-name { text-align: left; font-weight: bold; color: #fff; }
@@ -128,6 +125,27 @@
         @keyframes slideIn {
             from { opacity: 0; transform: translateX(-10px); }
             to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* RESPONSIVIDADE PARA CELULAR (MEDIA QUERY SMARTPHONES) */
+        @media (max-width: 850px) {
+            body { padding: 10px; }
+            header { flex-direction: column; align-items: flex-start; }
+            .controls { width: 100%; justify-content: space-between; }
+            select, button { flex-grow: 1; text-align: center; }
+            
+            .main-container { grid-template-columns: 1fr; height: auto; gap: 15px; }
+            .left-panel { order: 1; max-height: 380px; }
+            .center-panel { order: 2; height: 500px; min-height: 500px; }
+            .right-panel { order: 3; height: auto; }
+            
+            .simulation-grid { grid-template-columns: 1fr; gap: 20px; }
+            .match-info-left { width: 50%; }
+            .match-opponent { font-size: 15px; }
+            .match-stage { width: 65px; font-size: 10px; }
+            .match-timeline, .match-summary { padding-left: 10px; }
+            #simulation-view { padding: 15px; }
+            .sim-header h1 { font-size: 26px; }
         }
     </style>
 </head>
@@ -225,7 +243,7 @@
             <div class="simulation-grid">
                 <div id="matches-list">
                     <button class="btn-reveal-match" id="btn-reveal-first">REVELAR 1º JOGO →</button>
-                    </div>
+                </div>
 
                 <div class="standings-panel" id="standings-panel" style="display:none;">
                     <h3>Grupo da Morte</h3>
@@ -234,7 +252,7 @@
                             <tr><th>Time</th><th>P</th><th>V</th><th>SG</th></tr>
                         </thead>
                         <tbody id="standings-tbody">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -242,585 +260,5 @@
     </div>
 
     <script>
-        // BASE DE DADOS OFICIAL E LIMPA (Os mesmos 40 times autênticos ajustados)
-        const db = [{"id": 0, "time": "Santos", "ano": "1962", "cor": "#ffffff", "texto_cor": "#000000", "estilo": "Ataque Total e Tabelas R\u00e1pidas", "jogadores": [{"num": 1, "nome": "Gylmar", "pos": "GK", "ovr": 92, "atq": 40, "def": 92, "cri": 50, "fis": 89}, {"num": 2, "nome": "Lima", "pos": "RB/LB/CM", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 3, "nome": "Mauro Ramos", "pos": "CB", "ovr": 91, "atq": 40, "def": 91, "cri": 50, "fis": 88}, {"num": 4, "nome": "Calvet", "pos": "CB", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 6, "nome": "Dalmo", "pos": "LB", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 5, "nome": "Zito", "pos": "CDM/CM", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 8, "nome": "Meng\u00e1lvio", "pos": "CM", "ovr": 86, "atq": 40, "def": 45, "cri": 86, "fis": 83}, {"num": 7, "nome": "Dorval", "pos": "RW/RM", "ovr": 87, "atq": 87, "def": 45, "cri": 87, "fis": 84}, {"num": 9, "nome": "Coutinho", "pos": "ST", "ovr": 93, "atq": 93, "def": 45, "cri": 50, "fis": 90}, {"num": 10, "nome": "Pel\u00e9", "pos": "ST/CAM/RW", "ovr": 99, "atq": 99, "def": 45, "cri": 99, "fis": 96}, {"num": 11, "nome": "Pepe", "pos": "LW/LM", "ovr": 90, "atq": 90, "def": 45, "cri": 90, "fis": 87}, {"num": 12, "nome": "La\u00e9rcio", "pos": "GK", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 13, "nome": "Olavo", "pos": "CB", "ovr": 79, "atq": 40, "def": 79, "cri": 50, "fis": 75}, {"num": 14, "nome": "Formiga", "pos": "CDM", "ovr": 80, "atq": 40, "def": 80, "cri": 50, "fis": 75}, {"num": 15, "nome": "Tite", "pos": "LW/RW", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}, {"num": 16, "nome": "Pag\u00e3o", "pos": "ST", "ovr": 84, "atq": 84, "def": 45, "cri": 50, "fis": 81}, {"num": 17, "nome": "T. Guerreiro", "pos": "ST", "ovr": 82, "atq": 82, "def": 45, "cri": 50, "fis": 79}]}, {"id": 1, "time": "Cruzeiro", "ano": "1966", "cor": "#0047ab", "texto_cor": "#ffffff", "estilo": "Transi\u00e7\u00e3o Ofensiva e Toque T\u00e9cnico", "jogadores": [{"num": 1, "nome": "Raul Plassmann", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 2, "nome": "Pedro Paulo", "pos": "RB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 3, "nome": "William", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 4, "nome": "Proc\u00f3pio", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 6, "nome": "Neco", "pos": "LB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 5, "nome": "Piazza", "pos": "CDM/CB", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 8, "nome": "Dirceu Lopes", "pos": "CAM/CM", "ovr": 91, "atq": 91, "def": 45, "cri": 91, "fis": 88}, {"num": 7, "nome": "Natal", "pos": "RW", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}, {"num": 10, "nome": "Tost\u00e3o", "pos": "ST/CAM", "ovr": 93, "atq": 93, "def": 45, "cri": 93, "fis": 90}, {"num": 9, "nome": "Evaldo", "pos": "ST", "ovr": 82, "atq": 82, "def": 45, "cri": 50, "fis": 79}, {"num": 11, "nome": "Hilton Oliveira", "pos": "LW", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}, {"num": 12, "nome": "Tonho", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 13, "nome": "Vanderlei", "pos": "CB", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 14, "nome": "Claudio Deodato", "pos": "RB", "ovr": 75, "atq": 40, "def": 75, "cri": 75, "fis": 75}, {"num": 15, "nome": "Z\u00e9 Carlos", "pos": "CM/CDM", "ovr": 79, "atq": 40, "def": 79, "cri": 79, "fis": 75}, {"num": 16, "nome": "Dalmar", "pos": "CM", "ovr": 76, "atq": 40, "def": 45, "cri": 76, "fis": 75}, {"num": 17, "nome": "Marco Ant\u00f4nio", "pos": "LW/RW", "ovr": 74, "atq": 74, "def": 45, "cri": 50, "fis": 75}]}, {"id": 2, "time": "Internacional", "ano": "1976", "cor": "#e31837", "texto_cor": "#ffffff", "estilo": "Rolo Compressor e For\u00e7a F\u00edsica", "jogadores": [{"num": 1, "nome": "Manga", "pos": "GK", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 2, "nome": "Cl\u00e1udio Duarte", "pos": "RB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 3, "nome": "Figueroa", "pos": "CB", "ovr": 94, "atq": 40, "def": 94, "cri": 50, "fis": 91}, {"num": 4, "nome": "Marinho Peres", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 6, "nome": "Vacaria", "pos": "LB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 5, "nome": "Ca\u00e7apava", "pos": "CDM", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 8, "nome": "Falc\u00e3o", "pos": "CM/CDM", "ovr": 93, "atq": 40, "def": 93, "cri": 93, "fis": 90}, {"num": 11, "nome": "Batista", "pos": "CM/CDM", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 7, "nome": "Valdomiro", "pos": "RW/RM", "ovr": 85, "atq": 85, "def": 45, "cri": 85, "fis": 82}, {"num": 9, "nome": "Dad\u00e1 Maravilha", "pos": "ST", "ovr": 86, "atq": 86, "def": 45, "cri": 50, "fis": 83}, {"num": 10, "nome": "Lula", "pos": "LW", "ovr": 82, "atq": 82, "def": 45, "cri": 50, "fis": 79}, {"num": 12, "nome": "Gasparin", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "Herm\u00ednio", "pos": "CB", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}, {"num": 14, "nome": "Santos", "pos": "RB/LB", "ovr": 75, "atq": 40, "def": 75, "cri": 75, "fis": 75}, {"num": 15, "nome": "Jair", "pos": "CAM/CM", "ovr": 80, "atq": 80, "def": 45, "cri": 80, "fis": 75}, {"num": 16, "nome": "Escurinho", "pos": "ST", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}, {"num": 17, "nome": "Dario", "pos": "ST", "ovr": 78, "atq": 78, "def": 45, "cri": 50, "fis": 75}]}, {"id": 3, "time": "Flamengo", "ano": "1981", "cor": "#cc0000", "texto_cor": "#000000", "estilo": "Futebol Arte e Ultrapassagens Mortais", "jogadores": [{"num": 1, "nome": "Raul Plassmann", "pos": "GK", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 2, "nome": "Leandro", "pos": "RB/CB", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 3, "nome": "Marinho", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 4, "nome": "Mozer", "pos": "CB", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 6, "nome": "J\u00fanior", "pos": "LB/CM/CDM", "ovr": 92, "atq": 40, "def": 92, "cri": 92, "fis": 89}, {"num": 5, "nome": "Andrade", "pos": "CDM", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 8, "nome": "Ad\u00edlio", "pos": "CM", "ovr": 90, "atq": 40, "def": 45, "cri": 90, "fis": 87}, {"num": 7, "nome": "Tita", "pos": "RW/RM/CAM", "ovr": 85, "atq": 85, "def": 45, "cri": 85, "fis": 82}, {"num": 10, "nome": "Zico", "pos": "CAM/ST", "ovr": 97, "atq": 97, "def": 45, "cri": 97, "fis": 94}, {"num": 9, "nome": "Nunes", "pos": "ST", "ovr": 85, "atq": 85, "def": 45, "cri": 50, "fis": 82}, {"num": 11, "nome": "Lico", "pos": "LW", "ovr": 84, "atq": 84, "def": 45, "cri": 50, "fis": 81}, {"num": 12, "nome": "Cantarele", "pos": "GK", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 13, "nome": "Figueiredo", "pos": "CB", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 14, "nome": "Vitor", "pos": "CDM", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 15, "nome": "Peu", "pos": "CAM", "ovr": 78, "atq": 78, "def": 45, "cri": 78, "fis": 75}, {"num": 16, "nome": "Baroninho", "pos": "LW/RW", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Anselmo", "pos": "ST", "ovr": 77, "atq": 77, "def": 45, "cri": 50, "fis": 75}]}, {"id": 4, "time": "Gr\u00eamio", "ano": "1983", "cor": "#0080ff", "texto_cor": "#ffffff", "estilo": "Esp\u00edrito Copeiro e Contra-Ataque", "jogadores": [{"num": 1, "nome": "Mazar\u00f3pi", "pos": "GK", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 2, "nome": "Paulo Roberto", "pos": "RB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 3, "nome": "Baidek", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 4, "nome": "Hugo de Le\u00f3n", "pos": "CB", "ovr": 90, "atq": 40, "def": 90, "cri": 50, "fis": 87}, {"num": 6, "nome": "Casemiro", "pos": "LB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 5, "nome": "China", "pos": "CDM", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 8, "nome": "Osvaldo", "pos": "CM/CAM", "ovr": 86, "atq": 86, "def": 45, "cri": 86, "fis": 83}, {"num": 11, "nome": "M\u00e1rio S\u00e9rgio", "pos": "CAM/LW", "ovr": 88, "atq": 88, "def": 45, "cri": 88, "fis": 85}, {"num": 7, "nome": "Renato Ga\u00facho", "pos": "RW/ST", "ovr": 92, "atq": 92, "def": 45, "cri": 50, "fis": 89}, {"num": 9, "nome": "Caio", "pos": "ST", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}, {"num": 10, "nome": "Tarciso", "pos": "LW/ST", "ovr": 84, "atq": 84, "def": 45, "cri": 50, "fis": 81}, {"num": 12, "nome": "Beto", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 13, "nome": "Leandro", "pos": "CB", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 14, "nome": "Tonho", "pos": "RB", "ovr": 75, "atq": 40, "def": 75, "cri": 75, "fis": 75}, {"num": 15, "nome": "Bonamigo", "pos": "CM/CDM", "ovr": 80, "atq": 40, "def": 80, "cri": 80, "fis": 75}, {"num": 16, "nome": "C\u00e9sar", "pos": "ST", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Paulo Eg\u00eddio", "pos": "LW", "ovr": 78, "atq": 78, "def": 45, "cri": 50, "fis": 75}]}, {"id": 5, "time": "S\u00e3o Paulo", "ano": "1992", "cor": "#ffffff", "texto_cor": "#cc0000", "estilo": "Rigor T\u00e1tico de Tel\u00ea Santana", "jogadores": [{"num": 1, "nome": "Zetti", "pos": "GK", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 2, "nome": "Cafu", "pos": "RB/RM", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 3, "nome": "Ant\u00f4nio Carlos", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 4, "nome": "Ronald\u00e3o", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 6, "nome": "Ronaldo Lu\u00eds", "pos": "LB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 5, "nome": "Pintado", "pos": "CDM", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 8, "nome": "Dinho", "pos": "CDM/CM", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 10, "nome": "Ra\u00ed", "pos": "CAM/ST", "ovr": 92, "atq": 92, "def": 45, "cri": 92, "fis": 89}, {"num": 7, "nome": "M\u00fcller", "pos": "ST/RW", "ovr": 89, "atq": 89, "def": 45, "cri": 50, "fis": 86}, {"num": 9, "nome": "Palhinha", "pos": "ST/CAM", "ovr": 86, "atq": 86, "def": 45, "cri": 86, "fis": 83}, {"num": 11, "nome": "Eliv\u00e9lton", "pos": "LW/LM", "ovr": 82, "atq": 82, "def": 45, "cri": 82, "fis": 79}, {"num": 12, "nome": "Marcos", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "V\u00e1lber", "pos": "CB/RB", "ovr": 80, "atq": 40, "def": 80, "cri": 80, "fis": 75}, {"num": 14, "nome": "Ivan", "pos": "LB", "ovr": 75, "atq": 40, "def": 75, "cri": 75, "fis": 75}, {"num": 15, "nome": "Su\u00e9lio", "pos": "CDM", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 16, "nome": "Macedo", "pos": "RW/ST", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Cat\u00ea", "pos": "LW/RW", "ovr": 76, "atq": 76, "def": 45, "cri": 50, "fis": 75}]}, {"id": 6, "time": "Palmeiras", "ano": "1996", "cor": "#006400", "texto_cor": "#ffffff", "estilo": "Ataque dos 100 Gols", "jogadores": [{"num": 1, "nome": "Velloso", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 2, "nome": "Cafu", "pos": "RB/RM", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 3, "nome": "Sandro Blum", "pos": "CB", "ovr": 81, "atq": 40, "def": 81, "cri": 50, "fis": 78}, {"num": 4, "nome": "Cl\u00e9ber", "pos": "CB", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 6, "nome": "Junior", "pos": "LB/LM", "ovr": 87, "atq": 40, "def": 87, "cri": 87, "fis": 84}, {"num": 5, "nome": "Amaral", "pos": "CDM", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 8, "nome": "Fl\u00e1vio Concei\u00e7\u00e3o", "pos": "CM/CDM", "ovr": 85, "atq": 40, "def": 85, "cri": 85, "fis": 82}, {"num": 10, "nome": "Djalminha", "pos": "CAM", "ovr": 91, "atq": 91, "def": 45, "cri": 91, "fis": 88}, {"num": 11, "nome": "Rivaldo", "pos": "CAM/LW/ST", "ovr": 93, "atq": 93, "def": 45, "cri": 93, "fis": 90}, {"num": 7, "nome": "M\u00fcller", "pos": "ST/CAM", "ovr": 89, "atq": 89, "def": 45, "cri": 89, "fis": 86}, {"num": 9, "nome": "Luiz\u00e3o", "pos": "ST", "ovr": 87, "atq": 87, "def": 45, "cri": 50, "fis": 84}, {"num": 12, "nome": "S\u00e9rgio", "pos": "GK", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 13, "nome": "Roque J\u00fanior", "pos": "CB", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}, {"num": 14, "nome": "Galeano", "pos": "CDM/CB", "ovr": 80, "atq": 40, "def": 80, "cri": 50, "fis": 75}, {"num": 15, "nome": "Marquinhos", "pos": "CAM", "ovr": 76, "atq": 76, "def": 45, "cri": 76, "fis": 75}, {"num": 16, "nome": "Alex Alves", "pos": "RW/ST", "ovr": 79, "atq": 79, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Cris", "pos": "ST", "ovr": 74, "atq": 74, "def": 45, "cri": 50, "fis": 75}]}, {"id": 7, "time": "Vasco", "ano": "1998", "cor": "#ffffff", "texto_cor": "#000000", "estilo": "Equil\u00edbrio e Dupla de Ataque Letal", "jogadores": [{"num": 1, "nome": "Carlos Germano", "pos": "GK", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 2, "nome": "V\u00e1gner", "pos": "RB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 3, "nome": "Odvan", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 4, "nome": "Mauro Galv\u00e3o", "pos": "CB", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 6, "nome": "Felipe", "pos": "LB/LM/CAM", "ovr": 86, "atq": 86, "def": 86, "cri": 86, "fis": 83}, {"num": 5, "nome": "Luisinho", "pos": "CDM", "ovr": 82, "atq": 40, "def": 82, "cri": 50, "fis": 79}, {"num": 8, "nome": "Nasa", "pos": "CDM", "ovr": 80, "atq": 40, "def": 80, "cri": 50, "fis": 75}, {"num": 10, "nome": "Juninho Pernambucano", "pos": "CM/CAM", "ovr": 87, "atq": 87, "def": 45, "cri": 87, "fis": 84}, {"num": 7, "nome": "Pedrinho", "pos": "CAM/LW", "ovr": 84, "atq": 84, "def": 45, "cri": 84, "fis": 81}, {"num": 9, "nome": "Donizete", "pos": "ST/RW", "ovr": 85, "atq": 85, "def": 45, "cri": 50, "fis": 82}, {"num": 11, "nome": "Luiz\u00e3o", "pos": "ST", "ovr": 86, "atq": 86, "def": 45, "cri": 50, "fis": 83}, {"num": 12, "nome": "M\u00e1rcio", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 13, "nome": "V\u00e1lber", "pos": "CB/CDM", "ovr": 79, "atq": 40, "def": 79, "cri": 50, "fis": 75}, {"num": 14, "nome": "Alex Pinho", "pos": "CB", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 15, "nome": "Ramon", "pos": "CAM", "ovr": 81, "atq": 81, "def": 45, "cri": 81, "fis": 78}, {"num": 16, "nome": "Sorato", "pos": "ST", "ovr": 76, "atq": 76, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Mauricinho", "pos": "RW", "ovr": 75, "atq": 75, "def": 45, "cri": 50, "fis": 75}]}, {"id": 8, "time": "Corinthians", "ano": "2000", "cor": "#000000", "texto_cor": "#ffffff", "estilo": "Controle de Bola e Frieza", "jogadores": [{"num": 1, "nome": "Dida", "pos": "GK", "ovr": 90, "atq": 40, "def": 90, "cri": 50, "fis": 87}, {"num": 2, "nome": "\u00cdndio", "pos": "RB", "ovr": 80, "atq": 40, "def": 80, "cri": 80, "fis": 75}, {"num": 3, "nome": "Ad\u00edlson Batista", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 4, "nome": "F\u00e1bio Luciano", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 6, "nome": "Kl\u00e9ber", "pos": "LB", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 5, "nome": "Vampeta", "pos": "CM/CDM", "ovr": 87, "atq": 40, "def": 87, "cri": 87, "fis": 84}, {"num": 8, "nome": "Rinc\u00f3n", "pos": "CDM/CM", "ovr": 89, "atq": 40, "def": 89, "cri": 89, "fis": 86}, {"num": 10, "nome": "Ricardinho", "pos": "CM/CAM", "ovr": 86, "atq": 86, "def": 45, "cri": 86, "fis": 83}, {"num": 7, "nome": "Marcelinho Carioca", "pos": "CAM/RW/RM", "ovr": 90, "atq": 90, "def": 45, "cri": 90, "fis": 87}, {"num": 9, "nome": "Ed\u00edlson", "pos": "ST/RW", "ovr": 87, "atq": 87, "def": 45, "cri": 50, "fis": 84}, {"num": 11, "nome": "Luiz\u00e3o", "pos": "ST", "ovr": 88, "atq": 88, "def": 45, "cri": 50, "fis": 85}, {"num": 12, "nome": "Maur\u00edcio", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 13, "nome": "Jo\u00e3o Carlos", "pos": "CB", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 14, "nome": "Edu", "pos": "CM/CAM", "ovr": 80, "atq": 80, "def": 45, "cri": 80, "fis": 75}, {"num": 15, "nome": "Gilmar Fub\u00e1", "pos": "CDM", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 16, "nome": "Dinei", "pos": "ST", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}, {"num": 17, "nome": "Fernando Baiano", "pos": "ST", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}]}, {"id": 9, "time": "Cruzeiro", "ano": "2003", "cor": "#002fa7", "texto_cor": "#ffffff", "estilo": "Tr\u00edplice Coroa e Maestria de Alex", "jogadores": [{"num": 1, "nome": "Gomes", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 2, "nome": "Maurinho", "pos": "RB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 3, "nome": "Cris", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 4, "nome": "Edu Dracena", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 6, "nome": "Leandro", "pos": "LB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 5, "nome": "Maldonado", "pos": "CDM", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 8, "nome": "Augusto Recife", "pos": "CDM", "ovr": 80, "atq": 40, "def": 80, "cri": 50, "fis": 75}, {"num": 10, "nome": "Alex", "pos": "CAM/ST", "ovr": 94, "atq": 94, "def": 45, "cri": 94, "fis": 91}, {"num": 7, "nome": "Wendel", "pos": "CM/RB", "ovr": 80, "atq": 40, "def": 80, "cri": 80, "fis": 75}, {"num": 9, "nome": "Aristiz\u00e1bal", "pos": "ST", "ovr": 86, "atq": 86, "def": 45, "cri": 50, "fis": 83}, {"num": 11, "nome": "Deivid", "pos": "ST", "ovr": 84, "atq": 84, "def": 45, "cri": 50, "fis": 81}, {"num": 12, "nome": "Artur", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "Luis\u00e3o", "pos": "CB", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 14, "nome": "Felipe Melo", "pos": "CDM/CM", "ovr": 76, "atq": 40, "def": 76, "cri": 76, "fis": 75}, {"num": 15, "nome": "Zinho", "pos": "CAM/CM", "ovr": 81, "atq": 81, "def": 45, "cri": 81, "fis": 78}, {"num": 16, "nome": "M\u00e1rcio Nobre", "pos": "ST", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Mota", "pos": "ST/RW", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}]}, {"id": 10, "time": "Santos", "ano": "2011", "cor": "#ffffff", "texto_cor": "#000000", "estilo": "Futebol Irreverente e Dribles", "jogadores": [{"num": 1, "nome": "Rafael", "pos": "GK", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 4, "nome": "Danilo", "pos": "RB/CM", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 2, "nome": "Edu Dracena", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 6, "nome": "Durval", "pos": "CB", "ovr": 82, "atq": 40, "def": 82, "cri": 50, "fis": 79}, {"num": 3, "nome": "L\u00e9o", "pos": "LB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 5, "nome": "Arouca", "pos": "CDM/CM", "ovr": 85, "atq": 40, "def": 85, "cri": 85, "fis": 82}, {"num": 8, "nome": "Elano", "pos": "CM/CAM", "ovr": 85, "atq": 85, "def": 45, "cri": 85, "fis": 82}, {"num": 10, "nome": "Ganso", "pos": "CAM", "ovr": 88, "atq": 88, "def": 45, "cri": 88, "fis": 85}, {"num": 11, "nome": "Neymar Jr", "pos": "LW/ST", "ovr": 94, "atq": 94, "def": 45, "cri": 50, "fis": 91}, {"num": 9, "nome": "Borges", "pos": "ST", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}, {"num": 7, "nome": "Adriano", "pos": "CDM", "ovr": 81, "atq": 40, "def": 81, "cri": 50, "fis": 78}, {"num": 12, "nome": "Aranha", "pos": "GK", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 13, "nome": "Bruno Rodrigo", "pos": "CB", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 14, "nome": "Alex Sandro", "pos": "LB/LM", "ovr": 78, "atq": 40, "def": 78, "cri": 78, "fis": 75}, {"num": 15, "nome": "Felipe Anderson", "pos": "CAM", "ovr": 76, "atq": 76, "def": 45, "cri": 76, "fis": 75}, {"num": 16, "nome": "Z\u00e9 Eduardo", "pos": "ST", "ovr": 78, "atq": 78, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Alan Kardec", "pos": "ST", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}]}, {"id": 11, "time": "Atl\u00e9tico-MG", "ano": "2013", "cor": "#000000", "texto_cor": "#ffffff", "estilo": "Garra, Misticismo e Ronaldinho", "jogadores": [{"num": 1, "nome": "Victor", "pos": "GK", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 2, "nome": "Marcos Rocha", "pos": "RB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 3, "nome": "R\u00e9ver", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 4, "nome": "Leonardo Silva", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 6, "nome": "Richarlyson", "pos": "LB/CM", "ovr": 79, "atq": 40, "def": 79, "cri": 79, "fis": 75}, {"num": 5, "nome": "Pierre", "pos": "CDM", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 8, "nome": "Leandro Donizete", "pos": "CDM/CM", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 10, "nome": "Ronaldinho Ga\u00facho", "pos": "CAM/LW", "ovr": 93, "atq": 93, "def": 45, "cri": 93, "fis": 90}, {"num": 9, "nome": "Diego Tardelli", "pos": "RW/ST", "ovr": 86, "atq": 86, "def": 45, "cri": 50, "fis": 83}, {"num": 7, "nome": "J\u00f4", "pos": "ST", "ovr": 85, "atq": 85, "def": 45, "cri": 50, "fis": 82}, {"num": 11, "nome": "Luan", "pos": "RW/LW", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}, {"num": 12, "nome": "Giovanni", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "Gilberto Silva", "pos": "CB/CDM", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 14, "nome": "Josu\u00e9", "pos": "CDM/CM", "ovr": 79, "atq": 40, "def": 79, "cri": 79, "fis": 75}, {"num": 15, "nome": "Guilherme", "pos": "CAM/ST", "ovr": 80, "atq": 80, "def": 45, "cri": 80, "fis": 75}, {"num": 16, "nome": "Alecsandro", "pos": "ST", "ovr": 79, "atq": 79, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Neto Berola", "pos": "LW", "ovr": 76, "atq": 76, "def": 45, "cri": 50, "fis": 75}]}, {"id": 12, "time": "Flamengo", "ano": "2019", "cor": "#ba0c2f", "texto_cor": "#ffffff", "estilo": "Intensidade Sufocante e Dom\u00ednio", "jogadores": [{"num": 1, "nome": "Diego Alves", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 13, "nome": "Rafinha", "pos": "RB", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 3, "nome": "Rodrigo Caio", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 24, "nome": "Pablo Mar\u00ed", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 16, "nome": "Filipe Lu\u00eds", "pos": "LB", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 5, "nome": "Willian Ar\u00e3o", "pos": "CDM/CM", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 8, "nome": "Gerson", "pos": "CM/CDM", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 7, "nome": "Everton Ribeiro", "pos": "RM/CAM/CM", "ovr": 87, "atq": 87, "def": 45, "cri": 87, "fis": 84}, {"num": 14, "nome": "Arrascaeta", "pos": "CAM/LM", "ovr": 90, "atq": 90, "def": 45, "cri": 90, "fis": 87}, {"num": 27, "nome": "Bruno Henrique", "pos": "LW/ST", "ovr": 90, "atq": 90, "def": 45, "cri": 50, "fis": 87}, {"num": 9, "nome": "Gabigol", "pos": "ST", "ovr": 89, "atq": 89, "def": 45, "cri": 50, "fis": 86}, {"num": 12, "nome": "C\u00e9sar", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 2, "nome": "Rodinei", "pos": "RB", "ovr": 75, "atq": 40, "def": 75, "cri": 75, "fis": 75}, {"num": 6, "nome": "Ren\u00ea", "pos": "LB", "ovr": 76, "atq": 40, "def": 76, "cri": 76, "fis": 75}, {"num": 10, "nome": "Diego Ribas", "pos": "CAM/CM", "ovr": 80, "atq": 80, "def": 45, "cri": 80, "fis": 75}, {"num": 11, "nome": "Vitinho", "pos": "LW/RW", "ovr": 79, "atq": 79, "def": 45, "cri": 50, "fis": 75}, {"num": 19, "nome": "Reinier", "pos": "CAM/ST", "ovr": 76, "atq": 76, "def": 45, "cri": 76, "fis": 75}]}, {"id": 13, "time": "Real Madrid", "ano": "1960", "cor": "#ffffff", "texto_cor": "#000000", "estilo": "Lendas Europeias de Di St\u00e9fano e Pusk\u00e1s", "jogadores": [{"num": 1, "nome": "Dom\u00ednguez", "pos": "GK", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 2, "nome": "Marquitos", "pos": "RB", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 3, "nome": "Santamar\u00eda", "pos": "CB", "ovr": 91, "atq": 40, "def": 91, "cri": 50, "fis": 88}, {"num": 4, "nome": "Pach\u00edn", "pos": "LB", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 5, "nome": "Vidal", "pos": "CDM", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 6, "nome": "Z\u00e1rraga", "pos": "CM", "ovr": 85, "atq": 40, "def": 45, "cri": 85, "fis": 82}, {"num": 8, "nome": "Del Sol", "pos": "CM/CAM", "ovr": 85, "atq": 85, "def": 45, "cri": 85, "fis": 82}, {"num": 7, "nome": "Can\u00e1rio", "pos": "RW/RM", "ovr": 83, "atq": 83, "def": 45, "cri": 83, "fis": 80}, {"num": 11, "nome": "Gento", "pos": "LW/LM", "ovr": 92, "atq": 92, "def": 45, "cri": 92, "fis": 89}, {"num": 9, "nome": "Di St\u00e9fano", "pos": "ST/CAM", "ovr": 96, "atq": 96, "def": 45, "cri": 96, "fis": 93}, {"num": 10, "nome": "Pusk\u00e1s", "pos": "ST/CAM", "ovr": 95, "atq": 95, "def": 45, "cri": 95, "fis": 92}, {"num": 12, "nome": "Juan Alonso", "pos": "GK", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 13, "nome": "Miche", "pos": "CB", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 14, "nome": "Felo", "pos": "CM", "ovr": 75, "atq": 40, "def": 45, "cri": 75, "fis": 75}, {"num": 15, "nome": "Herrera", "pos": "RW", "ovr": 74, "atq": 74, "def": 45, "cri": 50, "fis": 75}, {"num": 16, "nome": "Pepillo", "pos": "ST", "ovr": 77, "atq": 77, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Casado", "pos": "LB", "ovr": 74, "atq": 40, "def": 74, "cri": 74, "fis": 75}]}, {"id": 14, "time": "Real Madrid", "ano": "2003", "cor": "#ffffff", "texto_cor": "#002040", "estilo": "Era de Ouro dos Gal\u00e1cticos", "jogadores": [{"num": 1, "nome": "Iker Casillas", "pos": "GK", "ovr": 90, "atq": 40, "def": 90, "cri": 50, "fis": 87}, {"num": 2, "nome": "M\u00edchel Salgado", "pos": "RB", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 4, "nome": "Fernando Hierro", "pos": "CB", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 6, "nome": "Iv\u00e1n Helguera", "pos": "CB/CDM", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 3, "nome": "Roberto Carlos", "pos": "LB/LM", "ovr": 92, "atq": 40, "def": 92, "cri": 92, "fis": 89}, {"num": 5, "nome": "C. Mak\u00e9l\u00e9l\u00e9", "pos": "CDM", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 16, "nome": "Fl\u00e1vio Concei\u00e7\u00e3o", "pos": "CM", "ovr": 82, "atq": 40, "def": 45, "cri": 82, "fis": 79}, {"num": 10, "nome": "Lu\u00eds Figo", "pos": "RM/RW", "ovr": 90, "atq": 90, "def": 45, "cri": 90, "fis": 87}, {"num": 5, "nome": "Z. Zidane", "pos": "CAM/CM", "ovr": 96, "atq": 96, "def": 45, "cri": 96, "fis": 93}, {"num": 7, "nome": "Ra\u00fal", "pos": "ST/CAM", "ovr": 90, "atq": 90, "def": 45, "cri": 90, "fis": 87}, {"num": 11, "nome": "Ronaldo", "pos": "ST", "ovr": 95, "atq": 95, "def": 45, "cri": 50, "fis": 92}, {"num": 12, "nome": "C\u00e9sar S\u00e1nchez", "pos": "GK", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 13, "nome": "Pav\u00f3n", "pos": "CB", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 14, "nome": "Guti", "pos": "CAM/CM", "ovr": 85, "atq": 85, "def": 45, "cri": 85, "fis": 82}, {"num": 15, "nome": "S. Solari", "pos": "LM/LW", "ovr": 81, "atq": 81, "def": 45, "cri": 81, "fis": 78}, {"num": 16, "nome": "McManaman", "pos": "CM", "ovr": 80, "atq": 40, "def": 45, "cri": 80, "fis": 75}, {"num": 17, "nome": "Portillo", "pos": "ST", "ovr": 76, "atq": 76, "def": 45, "cri": 50, "fis": 75}]}, {"id": 15, "time": "Barcelona", "ano": "2009", "cor": "#004d98", "texto_cor": "#a50044", "estilo": "O Lend\u00e1rio Tiki-Taka de Pep Guardiola", "jogadores": [{"num": 1, "nome": "Victor Vald\u00e9s", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 20, "nome": "Dani Alves", "pos": "RB", "ovr": 90, "atq": 40, "def": 90, "cri": 90, "fis": 87}, {"num": 5, "nome": "Carles Puyol", "pos": "CB/RB", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 3, "nome": "Gerard Piqu\u00e9", "pos": "CB", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 22, "nome": "Eric Abidal", "pos": "LB/CB", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 24, "nome": "Yaya Tour\u00e9", "pos": "CDM/CM", "ovr": 87, "atq": 40, "def": 87, "cri": 87, "fis": 84}, {"num": 6, "nome": "Xavi", "pos": "CM", "ovr": 95, "atq": 40, "def": 45, "cri": 95, "fis": 92}, {"num": 8, "nome": "Andr\u00e9s Iniesta", "pos": "CM/CAM/LW", "ovr": 94, "atq": 94, "def": 45, "cri": 94, "fis": 91}, {"num": 10, "nome": "Lionel Messi", "pos": "RW/ST/CAM", "ovr": 97, "atq": 97, "def": 45, "cri": 97, "fis": 94}, {"num": 9, "nome": "Samuel Eto'o", "pos": "ST", "ovr": 91, "atq": 91, "def": 45, "cri": 50, "fis": 88}, {"num": 14, "nome": "Thierry Henry", "pos": "LW/ST", "ovr": 90, "atq": 90, "def": 45, "cri": 50, "fis": 87}, {"num": 12, "nome": "Pinto", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 4, "nome": "Rafa M\u00e1rquez", "pos": "CB/CDM", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 16, "nome": "Sylvinho", "pos": "LB", "ovr": 78, "atq": 40, "def": 78, "cri": 78, "fis": 75}, {"num": 15, "nome": "Seydou Keita", "pos": "CM/CDM", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 28, "nome": "Busquets", "pos": "CDM", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 17, "nome": "Pedro", "pos": "RW/LW", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}]}, {"id": 16, "time": "Barcelona", "ano": "2015", "cor": "#004d98", "texto_cor": "#a50044", "estilo": "Trio MSN e Ataque Demolidor", "jogadores": [{"num": 1, "nome": "ter Stegen", "pos": "GK", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 2, "nome": "Dani Alves", "pos": "RB", "ovr": 88, "atq": 40, "def": 88, "cri": 88, "fis": 85}, {"num": 3, "nome": "Piqu\u00e9", "pos": "CB", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 14, "nome": "Mascherano", "pos": "CB/CDM", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 18, "nome": "Jordi Alba", "pos": "LB", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 5, "nome": "Busquets", "pos": "CDM", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 4, "nome": "Rakitic", "pos": "CM", "ovr": 86, "atq": 40, "def": 45, "cri": 86, "fis": 83}, {"num": 8, "nome": "Iniesta", "pos": "CM/CAM/LW", "ovr": 91, "atq": 91, "def": 45, "cri": 91, "fis": 88}, {"num": 10, "nome": "Messi", "pos": "RW/CAM/ST", "ovr": 98, "atq": 98, "def": 45, "cri": 98, "fis": 95}, {"num": 9, "nome": "Su\u00e1rez", "pos": "ST", "ovr": 94, "atq": 94, "def": 45, "cri": 50, "fis": 91}, {"num": 11, "nome": "Neymar Jr", "pos": "LW/LM", "ovr": 93, "atq": 93, "def": 45, "cri": 93, "fis": 90}, {"num": 12, "nome": "Bravo", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 13, "nome": "Bartra", "pos": "CB", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}, {"num": 21, "nome": "Adriano", "pos": "LB/RB", "ovr": 78, "atq": 40, "def": 78, "cri": 78, "fis": 75}, {"num": 6, "nome": "Xavi", "pos": "CM", "ovr": 85, "atq": 40, "def": 45, "cri": 85, "fis": 82}, {"num": 12, "nome": "Rafinha", "pos": "CM/CAM", "ovr": 80, "atq": 80, "def": 45, "cri": 80, "fis": 75}, {"num": 7, "nome": "Pedro", "pos": "RW/LW", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}]}, {"id": 17, "time": "Real Madrid", "ano": "2017", "cor": "#ffffff", "texto_cor": "#002040", "estilo": "O Tri Lend\u00e1rio da Champions de Zidane", "jogadores": [{"num": 1, "nome": "Keylor Navas", "pos": "GK", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 2, "nome": "Dani Carvajal", "pos": "RB", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 4, "nome": "Sergio Ramos", "pos": "CB/RB", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 5, "nome": "Rapha\u00ebl Varane", "pos": "CB", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 12, "nome": "Marcelo", "pos": "LB/LM/LW", "ovr": 91, "atq": 91, "def": 91, "cri": 91, "fis": 88}, {"num": 14, "nome": "Casemiro", "pos": "CDM", "ovr": 90, "atq": 40, "def": 90, "cri": 50, "fis": 87}, {"num": 8, "nome": "Toni Kroos", "pos": "CM", "ovr": 92, "atq": 40, "def": 45, "cri": 92, "fis": 89}, {"num": 19, "nome": "Luka Modric", "pos": "CM", "ovr": 93, "atq": 40, "def": 45, "cri": 93, "fis": 90}, {"num": 22, "nome": "Isco", "pos": "CAM/CM", "ovr": 87, "atq": 87, "def": 45, "cri": 87, "fis": 84}, {"num": 9, "nome": "Karim Benzema", "pos": "ST", "ovr": 89, "atq": 89, "def": 45, "cri": 50, "fis": 86}, {"num": 7, "nome": "C. Ronaldo", "pos": "LW/ST", "ovr": 96, "atq": 96, "def": 45, "cri": 50, "fis": 93}, {"num": 13, "nome": "Kiko Casilla", "pos": "GK", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 6, "nome": "Nacho", "pos": "CB/LB/RB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 16, "nome": "Mateo Kovacic", "pos": "CM/CDM", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 10, "nome": "James Rodr\u00edguez", "pos": "CAM", "ovr": 83, "atq": 83, "def": 45, "cri": 83, "fis": 80}, {"num": 20, "nome": "Marco Asensio", "pos": "LW/RW/CAM", "ovr": 82, "atq": 82, "def": 45, "cri": 82, "fis": 79}, {"num": 11, "nome": "Gareth Bale", "pos": "RW/LW/ST", "ovr": 86, "atq": 86, "def": 45, "cri": 50, "fis": 83}]}, {"id": 18, "time": "Juventus", "ano": "1984", "cor": "#1e1e1e", "texto_cor": "#fafafa", "estilo": "Estrat\u00e9gia Cl\u00e1ssica Italiana com Scirea e Platini", "jogadores": [{"num": 1, "nome": "Bodini", "pos": "GK", "ovr": 82, "atq": 40, "def": 82, "cri": 50, "fis": 79}, {"num": 2, "nome": "Gentile", "pos": "RB/CB", "ovr": 90, "atq": 40, "def": 90, "cri": 90, "fis": 87}, {"num": 3, "nome": "Scirea", "pos": "CB", "ovr": 94, "atq": 40, "def": 94, "cri": 50, "fis": 91}, {"num": 4, "nome": "Brio", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 5, "nome": "Cabrini", "pos": "LB", "ovr": 89, "atq": 40, "def": 89, "cri": 89, "fis": 86}, {"num": 6, "nome": "Bonini", "pos": "CDM", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 7, "nome": "Tardelli", "pos": "CM", "ovr": 88, "atq": 40, "def": 45, "cri": 88, "fis": 85}, {"num": 8, "nome": "Vignola", "pos": "CAM", "ovr": 80, "atq": 80, "def": 45, "cri": 80, "fis": 75}, {"num": 10, "nome": "Platini", "pos": "CAM/ST", "ovr": 96, "atq": 96, "def": 45, "cri": 96, "fis": 93}, {"num": 9, "nome": "Boniek", "pos": "ST/LW", "ovr": 88, "atq": 88, "def": 45, "cri": 50, "fis": 85}, {"num": 11, "nome": "Paolo Rossi", "pos": "ST", "ovr": 90, "atq": 90, "def": 45, "cri": 50, "fis": 87}, {"num": 12, "nome": "Tacconi", "pos": "GK", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 13, "nome": "Caricola", "pos": "CB", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 14, "nome": "Prandelli", "pos": "CM", "ovr": 76, "atq": 40, "def": 45, "cri": 76, "fis": 75}, {"num": 15, "nome": "Furino", "pos": "CDM", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}, {"num": 16, "nome": "Limido", "pos": "LM", "ovr": 74, "atq": 40, "def": 45, "cri": 74, "fis": 75}, {"num": 17, "nome": "Penzo", "pos": "ST", "ovr": 78, "atq": 78, "def": 45, "cri": 50, "fis": 75}]}, {"id": 19, "time": "Napoli", "ano": "1989", "cor": "#4169e1", "texto_cor": "#ffffff", "estilo": "Magia de Diego e Ataque Implac\u00e1vel", "jogadores": [{"num": 1, "nome": "G. Giuliani", "pos": "GK", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 2, "nome": "Ciro Ferrara", "pos": "CB/RB", "ovr": 88, "atq": 40, "def": 88, "cri": 88, "fis": 85}, {"num": 3, "nome": "A. Renica", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 4, "nome": "G. Corradini", "pos": "CB", "ovr": 82, "atq": 40, "def": 82, "cri": 50, "fis": 79}, {"num": 6, "nome": "G. Francini", "pos": "LB", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 5, "nome": "Alem\u00e3o", "pos": "CDM/CM", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 8, "nome": "F. De Napoli", "pos": "CM/CDM", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 7, "nome": "Luca Fusi", "pos": "CM", "ovr": 81, "atq": 40, "def": 45, "cri": 81, "fis": 78}, {"num": 10, "nome": "Diego Maradona", "pos": "CAM/ST/RW", "ovr": 98, "atq": 98, "def": 45, "cri": 98, "fis": 95}, {"num": 9, "nome": "Careca", "pos": "ST", "ovr": 91, "atq": 91, "def": 45, "cri": 50, "fis": 88}, {"num": 11, "nome": "A. Carnevale", "pos": "ST/LW", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}, {"num": 12, "nome": "R. Di Fusco", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "T. Bigliardi", "pos": "CB", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 14, "nome": "A. Carannante", "pos": "LB", "ovr": 74, "atq": 40, "def": 74, "cri": 74, "fis": 75}, {"num": 15, "nome": "Massimo Crippa", "pos": "CM/RM", "ovr": 79, "atq": 40, "def": 45, "cri": 79, "fis": 75}, {"num": 16, "nome": "Gianfranco Zola", "pos": "CAM/ST", "ovr": 84, "atq": 84, "def": 45, "cri": 84, "fis": 81}, {"num": 17, "nome": "Marco Ferrante", "pos": "ST", "ovr": 73, "atq": 73, "def": 45, "cri": 50, "fis": 75}]}, {"id": 20, "time": "Milan", "ano": "1989", "cor": "#ff0000", "texto_cor": "#000000", "estilo": "A Maior Linha Defensiva com o Trio Holand\u00eas", "jogadores": [{"num": 1, "nome": "Galli", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 2, "nome": "Tassotti", "pos": "RB", "ovr": 87, "atq": 40, "def": 87, "cri": 87, "fis": 84}, {"num": 3, "nome": "Costacurta", "pos": "CB", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 4, "nome": "Baresi", "pos": "CB", "ovr": 94, "atq": 40, "def": 94, "cri": 50, "fis": 91}, {"num": 5, "nome": "Maldini", "pos": "LB/CB", "ovr": 93, "atq": 40, "def": 93, "cri": 93, "fis": 90}, {"num": 6, "nome": "Rijkaard", "pos": "CDM/CM", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 7, "nome": "Ancelotti", "pos": "CM", "ovr": 86, "atq": 40, "def": 45, "cri": 86, "fis": 83}, {"num": 8, "nome": "Donadoni", "pos": "RM/LM/LW", "ovr": 88, "atq": 88, "def": 45, "cri": 88, "fis": 85}, {"num": 11, "nome": "Evani", "pos": "LM/CM", "ovr": 83, "atq": 40, "def": 45, "cri": 83, "fis": 80}, {"num": 9, "nome": "Gullit", "pos": "CAM/ST/RW", "ovr": 93, "atq": 93, "def": 45, "cri": 93, "fis": 90}, {"num": 10, "nome": "van Basten", "pos": "ST", "ovr": 95, "atq": 95, "def": 45, "cri": 50, "fis": 92}, {"num": 12, "nome": "Antonioli", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 13, "nome": "F. Galli", "pos": "CB", "ovr": 79, "atq": 40, "def": 79, "cri": 50, "fis": 75}, {"num": 14, "nome": "Mussi", "pos": "RB/LB", "ovr": 76, "atq": 40, "def": 76, "cri": 76, "fis": 75}, {"num": 15, "nome": "Colombo", "pos": "RM/CM", "ovr": 81, "atq": 40, "def": 45, "cri": 81, "fis": 78}, {"num": 16, "nome": "D. Albertini", "pos": "CM/CDM", "ovr": 78, "atq": 40, "def": 78, "cri": 78, "fis": 75}, {"num": 17, "nome": "Pietro P. Virdis", "pos": "ST", "ovr": 82, "atq": 82, "def": 45, "cri": 50, "fis": 79}]}, {"id": 21, "time": "Parma", "ano": "1999", "cor": "#ffff00", "texto_cor": "#000080", "estilo": "Esquadr\u00e3o Hist\u00f3rico Giallobl\u00f9 de Crespo e Ver\u00f3n", "jogadores": [{"num": 1, "nome": "Buffon", "pos": "GK", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 2, "nome": "Thuram", "pos": "RB/CB", "ovr": 89, "atq": 40, "def": 89, "cri": 89, "fis": 86}, {"num": 3, "nome": "Sensini", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 4, "nome": "Cannavaro", "pos": "CB", "ovr": 90, "atq": 40, "def": 90, "cri": 50, "fis": 87}, {"num": 5, "nome": "Vanoli", "pos": "LB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 6, "nome": "Boghossian", "pos": "CDM", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 7, "nome": "Dino Baggio", "pos": "CM", "ovr": 85, "atq": 40, "def": 45, "cri": 85, "fis": 82}, {"num": 8, "nome": "Ver\u00f3n", "pos": "CAM/CM", "ovr": 89, "atq": 89, "def": 45, "cri": 89, "fis": 86}, {"num": 9, "nome": "Stanic", "pos": "RM", "ovr": 82, "atq": 40, "def": 45, "cri": 82, "fis": 79}, {"num": 10, "nome": "Chiesa", "pos": "ST", "ovr": 85, "atq": 85, "def": 45, "cri": 50, "fis": 82}, {"num": 11, "nome": "Crespo", "pos": "ST", "ovr": 88, "atq": 88, "def": 45, "cri": 50, "fis": 85}, {"num": 12, "nome": "Micillo", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "Apolloni", "pos": "CB", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}, {"num": 14, "nome": "Benarrivo", "pos": "LB/RB", "ovr": 79, "atq": 40, "def": 79, "cri": 79, "fis": 75}, {"num": 15, "nome": "Fiore", "pos": "CAM", "ovr": 81, "atq": 81, "def": 45, "cri": 81, "fis": 78}, {"num": 16, "nome": "Fuser", "pos": "RM/CM", "ovr": 80, "atq": 40, "def": 45, "cri": 80, "fis": 75}, {"num": 17, "nome": "Asprilla", "pos": "ST", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}]}, {"id": 22, "time": "Milan", "ano": "2005", "cor": "#ff0000", "texto_cor": "#000000", "estilo": "Constela\u00e7\u00e3o de Craques de Kak\u00e1 e Shevchenko", "jogadores": [{"num": 1, "nome": "Dida", "pos": "GK", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 2, "nome": "Cafu", "pos": "RB", "ovr": 89, "atq": 40, "def": 89, "cri": 89, "fis": 86}, {"num": 3, "nome": "Stam", "pos": "CB", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 4, "nome": "Nesta", "pos": "CB", "ovr": 92, "atq": 40, "def": 92, "cri": 50, "fis": 89}, {"num": 5, "nome": "Maldini", "pos": "LB/CB", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 6, "nome": "Gattuso", "pos": "CDM", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 7, "nome": "Pirlo", "pos": "CM/CDM", "ovr": 92, "atq": 40, "def": 92, "cri": 92, "fis": 89}, {"num": 8, "nome": "Seedorf", "pos": "CM/LM", "ovr": 89, "atq": 40, "def": 45, "cri": 89, "fis": 86}, {"num": 9, "nome": "Kak\u00e1", "pos": "CAM", "ovr": 92, "atq": 92, "def": 45, "cri": 92, "fis": 89}, {"num": 10, "nome": "Shevchenko", "pos": "ST", "ovr": 92, "atq": 92, "def": 45, "cri": 50, "fis": 89}, {"num": 11, "nome": "Crespo", "pos": "ST", "ovr": 87, "atq": 87, "def": 45, "cri": 50, "fis": 84}, {"num": 12, "nome": "Abbiati", "pos": "GK", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}, {"num": 13, "nome": "Costacurta", "pos": "CB", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 14, "nome": "Kaladze", "pos": "CB/LB", "ovr": 80, "atq": 40, "def": 80, "cri": 80, "fis": 75}, {"num": 15, "nome": "Serginho", "pos": "LB/LM", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 16, "nome": "Ambrosini", "pos": "CDM/CM", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 17, "nome": "Inzaghi", "pos": "ST", "ovr": 84, "atq": 84, "def": 45, "cri": 50, "fis": 81}]}, {"id": 23, "time": "Inter de Mil\u00e3o", "ano": "2010", "cor": "#0000ff", "texto_cor": "#ffffff", "estilo": "A Tr\u00edplice Coroa Defensiva de Mourinho", "jogadores": [{"num": 1, "nome": "J\u00falio C\u00e9sar", "pos": "GK", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 2, "nome": "Maicon", "pos": "RB", "ovr": 89, "atq": 40, "def": 89, "cri": 89, "fis": 86}, {"num": 3, "nome": "L\u00facio", "pos": "CB", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 4, "nome": "Samuel", "pos": "CB", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 5, "nome": "Chivu", "pos": "LB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 6, "nome": "Cambiasso", "pos": "CDM", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 7, "nome": "Zanetti", "pos": "LB/CDM/RB/CM", "ovr": 88, "atq": 40, "def": 88, "cri": 88, "fis": 85}, {"num": 8, "nome": "Stankovi\u0107", "pos": "CM", "ovr": 84, "atq": 40, "def": 45, "cri": 84, "fis": 81}, {"num": 9, "nome": "Sneijder", "pos": "CAM", "ovr": 92, "atq": 92, "def": 45, "cri": 92, "fis": 89}, {"num": 10, "nome": "Eto'o", "pos": "ST/LW/RW", "ovr": 90, "atq": 90, "def": 45, "cri": 50, "fis": 87}, {"num": 11, "nome": "Milito", "pos": "ST", "ovr": 91, "atq": 91, "def": 45, "cri": 50, "fis": 88}, {"num": 12, "nome": "Toldo", "pos": "GK", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 13, "nome": "C\u00f3rdoba", "pos": "CB", "ovr": 80, "atq": 40, "def": 80, "cri": 50, "fis": 75}, {"num": 14, "nome": "Materazzi", "pos": "CB", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 15, "nome": "Muntari", "pos": "CDM", "ovr": 79, "atq": 40, "def": 79, "cri": 50, "fis": 75}, {"num": 16, "nome": "Thiago Motta", "pos": "CM", "ovr": 83, "atq": 40, "def": 45, "cri": 83, "fis": 80}, {"num": 17, "nome": "Balotelli", "pos": "ST", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}]}, {"id": 24, "time": "Juventus", "ano": "2015", "cor": "#1e1e1e", "texto_cor": "#fafafa", "estilo": "Meio-Campo Dominante e Finalistas Europeus", "jogadores": [{"num": 1, "nome": "Buffon", "pos": "GK", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 2, "nome": "Lichtsteiner", "pos": "RB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 3, "nome": "Bonucci", "pos": "CB", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 4, "nome": "Chiellini", "pos": "CB", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 5, "nome": "Evra", "pos": "LB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 6, "nome": "Pirlo", "pos": "CM/CDM", "ovr": 87, "atq": 40, "def": 87, "cri": 87, "fis": 84}, {"num": 7, "nome": "Marchisio", "pos": "CM", "ovr": 85, "atq": 40, "def": 45, "cri": 85, "fis": 82}, {"num": 8, "nome": "Pogba", "pos": "CM/LM", "ovr": 88, "atq": 40, "def": 45, "cri": 88, "fis": 85}, {"num": 9, "nome": "Vidal", "pos": "CM/CDM/CAM", "ovr": 87, "atq": 87, "def": 87, "cri": 87, "fis": 84}, {"num": 10, "nome": "Tevez", "pos": "ST", "ovr": 89, "atq": 89, "def": 45, "cri": 50, "fis": 86}, {"num": 11, "nome": "Morata", "pos": "ST", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}, {"num": 12, "nome": "Storari", "pos": "GK", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 13, "nome": "Barzagli", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 14, "nome": "C\u00e1ceres", "pos": "CB/RB", "ovr": 78, "atq": 40, "def": 78, "cri": 78, "fis": 75}, {"num": 15, "nome": "Asamoah", "pos": "LM/LB", "ovr": 80, "atq": 40, "def": 80, "cri": 80, "fis": 75}, {"num": 16, "nome": "Pereyra", "pos": "CAM/CM", "ovr": 79, "atq": 79, "def": 45, "cri": 79, "fis": 75}, {"num": 17, "nome": "Llorente", "pos": "ST", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}]}, {"id": 25, "time": "Liverpool", "ano": "1978", "cor": "#cc0000", "texto_cor": "#ffffff", "estilo": "Eleg\u00e2ncia Vermelha e Dom\u00ednio Absoluto", "jogadores": [{"num": 1, "nome": "Clemence", "pos": "GK", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 2, "nome": "Neal", "pos": "RB", "ovr": 85, "atq": 40, "def": 85, "cri": 85, "fis": 82}, {"num": 3, "nome": "Thompson", "pos": "CB", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 4, "nome": "Hansen", "pos": "CB", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 5, "nome": "Hughes", "pos": "LB/CDM", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 6, "nome": "Souness", "pos": "CDM/CM", "ovr": 89, "atq": 40, "def": 89, "cri": 89, "fis": 86}, {"num": 7, "nome": "Kennedy", "pos": "LM", "ovr": 85, "atq": 40, "def": 45, "cri": 85, "fis": 82}, {"num": 8, "nome": "Case", "pos": "RM", "ovr": 83, "atq": 40, "def": 45, "cri": 83, "fis": 80}, {"num": 9, "nome": "McDermott", "pos": "CM", "ovr": 86, "atq": 40, "def": 45, "cri": 86, "fis": 83}, {"num": 10, "nome": "Dalglish", "pos": "ST/CAM", "ovr": 93, "atq": 93, "def": 45, "cri": 93, "fis": 90}, {"num": 11, "nome": "Fairclough", "pos": "ST", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}, {"num": 12, "nome": "Ogrizovic", "pos": "GK", "ovr": 73, "atq": 40, "def": 73, "cri": 50, "fis": 75}, {"num": 13, "nome": "Smith", "pos": "CB", "ovr": 79, "atq": 40, "def": 79, "cri": 50, "fis": 75}, {"num": 14, "nome": "Jones", "pos": "LB", "ovr": 75, "atq": 40, "def": 75, "cri": 75, "fis": 75}, {"num": 15, "nome": "Callaghan", "pos": "CM", "ovr": 78, "atq": 40, "def": 45, "cri": 78, "fis": 75}, {"num": 16, "nome": "Johnson", "pos": "ST", "ovr": 79, "atq": 79, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Heighway", "pos": "LW", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}]}, {"id": 26, "time": "Man United", "ano": "1999", "cor": "#cc0000", "texto_cor": "#ffffff", "estilo": "A Tr\u00edplice Coroa Milagrosa nos Acr\u00e9scimos", "jogadores": [{"num": 1, "nome": "Schmeichel", "pos": "GK", "ovr": 91, "atq": 40, "def": 91, "cri": 50, "fis": 88}, {"num": 2, "nome": "G. Neville", "pos": "RB", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 3, "nome": "Stam", "pos": "CB", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 4, "nome": "Johnsen", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 5, "nome": "Irwin", "pos": "LB", "ovr": 85, "atq": 40, "def": 85, "cri": 85, "fis": 82}, {"num": 6, "nome": "Keane", "pos": "CDM/CM", "ovr": 90, "atq": 40, "def": 90, "cri": 90, "fis": 87}, {"num": 7, "nome": "Scholes", "pos": "CM/CAM", "ovr": 90, "atq": 90, "def": 45, "cri": 90, "fis": 87}, {"num": 8, "nome": "Beckham", "pos": "RM/CM", "ovr": 89, "atq": 40, "def": 45, "cri": 89, "fis": 86}, {"num": 11, "nome": "Giggs", "pos": "LM/LW", "ovr": 89, "atq": 89, "def": 45, "cri": 89, "fis": 86}, {"num": 9, "nome": "Cole", "pos": "ST", "ovr": 86, "atq": 86, "def": 45, "cri": 50, "fis": 83}, {"num": 10, "nome": "Yorke", "pos": "ST", "ovr": 87, "atq": 87, "def": 45, "cri": 50, "fis": 84}, {"num": 12, "nome": "van der Gouw", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 13, "nome": "Berg", "pos": "CB", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 14, "nome": "P. Neville", "pos": "LB/RB", "ovr": 78, "atq": 40, "def": 78, "cri": 78, "fis": 75}, {"num": 15, "nome": "Butt", "pos": "CDM", "ovr": 81, "atq": 40, "def": 81, "cri": 50, "fis": 78}, {"num": 16, "nome": "Sheringham", "pos": "ST", "ovr": 82, "atq": 82, "def": 45, "cri": 50, "fis": 79}, {"num": 17, "nome": "Solskjaer", "pos": "ST", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}]}, {"id": 27, "time": "Arsenal", "ano": "2004", "cor": "#ef0107", "texto_cor": "#ffffff", "estilo": "Os Invenc\u00edveis Hist\u00f3ricos da Premier League", "jogadores": [{"num": 1, "nome": "Lehmann", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 2, "nome": "Lauren", "pos": "RB", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 3, "nome": "Tour\u00e9", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 4, "nome": "Campbell", "pos": "CB", "ovr": 88, "atq": 40, "def": 88, "cri": 50, "fis": 85}, {"num": 5, "nome": "Ashley Cole", "pos": "LB", "ovr": 87, "atq": 40, "def": 87, "cri": 87, "fis": 84}, {"num": 6, "nome": "Vieira", "pos": "CDM/CM", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 7, "nome": "Gilberto Silva", "pos": "CDM", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 8, "nome": "Ljungberg", "pos": "RM/RW", "ovr": 85, "atq": 85, "def": 45, "cri": 85, "fis": 82}, {"num": 11, "nome": "Pires", "pos": "LM/LW", "ovr": 88, "atq": 88, "def": 45, "cri": 88, "fis": 85}, {"num": 9, "nome": "Bergkamp", "pos": "ST/CAM", "ovr": 91, "atq": 91, "def": 45, "cri": 91, "fis": 88}, {"num": 10, "nome": "Henry", "pos": "ST/LW", "ovr": 95, "atq": 95, "def": 45, "cri": 50, "fis": 92}, {"num": 12, "nome": "Taylor", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "Keown", "pos": "CB", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}, {"num": 14, "nome": "Clichy", "pos": "LB", "ovr": 76, "atq": 40, "def": 76, "cri": 76, "fis": 75}, {"num": 15, "nome": "Parlour", "pos": "CM", "ovr": 78, "atq": 40, "def": 45, "cri": 78, "fis": 75}, {"num": 16, "nome": "Edu Gaspar", "pos": "CM", "ovr": 80, "atq": 40, "def": 45, "cri": 80, "fis": 75}, {"num": 17, "nome": "Wiltord", "pos": "RW/ST", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}]}, {"id": 28, "time": "Man United", "ano": "2008", "cor": "#cc0000", "texto_cor": "#ffffff", "estilo": "A Dinamite de CR7, Rooney e Tevez", "jogadores": [{"num": 1, "nome": "van der Sar", "pos": "GK", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 2, "nome": "Brown", "pos": "RB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 3, "nome": "Ferdinand", "pos": "CB", "ovr": 90, "atq": 40, "def": 90, "cri": 50, "fis": 87}, {"num": 4, "nome": "Vidic", "pos": "CB", "ovr": 90, "atq": 40, "def": 90, "cri": 50, "fis": 87}, {"num": 5, "nome": "Evra", "pos": "LB", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 6, "nome": "Carrick", "pos": "CDM", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 7, "nome": "Scholes", "pos": "CM", "ovr": 86, "atq": 40, "def": 45, "cri": 86, "fis": 83}, {"num": 8, "nome": "Giggs", "pos": "LM/LW", "ovr": 85, "atq": 85, "def": 45, "cri": 85, "fis": 82}, {"num": 9, "nome": "Rooney", "pos": "ST/CAM", "ovr": 91, "atq": 91, "def": 45, "cri": 91, "fis": 88}, {"num": 10, "nome": "Tevez", "pos": "ST", "ovr": 88, "atq": 88, "def": 45, "cri": 50, "fis": 85}, {"num": 11, "nome": "C. Ronaldo", "pos": "RW/LW/ST", "ovr": 95, "atq": 95, "def": 45, "cri": 50, "fis": 92}, {"num": 12, "nome": "Kuszczak", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 13, "nome": "O'Shea", "pos": "CB/RB", "ovr": 79, "atq": 40, "def": 79, "cri": 79, "fis": 75}, {"num": 14, "nome": "Hargreaves", "pos": "CDM", "ovr": 82, "atq": 40, "def": 82, "cri": 50, "fis": 79}, {"num": 15, "nome": "Fletcher", "pos": "CM", "ovr": 81, "atq": 40, "def": 45, "cri": 81, "fis": 78}, {"num": 16, "nome": "Nani", "pos": "LW/RW", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}, {"num": 17, "nome": "Park Ji-sung", "pos": "RM", "ovr": 82, "atq": 40, "def": 45, "cri": 82, "fis": 79}]}, {"id": 29, "time": "Man City", "ano": "2019", "cor": "#6cabdd", "texto_cor": "#ffffff", "estilo": "O Esquadr\u00e3o Impar\u00e1vel dos 100 Pontos", "jogadores": [{"num": 1, "nome": "Ederson", "pos": "GK", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 2, "nome": "Walker", "pos": "RB", "ovr": 85, "atq": 40, "def": 85, "cri": 85, "fis": 82}, {"num": 3, "nome": "Laporte", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 4, "nome": "Stones", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 5, "nome": "Zinchenko", "pos": "LB", "ovr": 80, "atq": 40, "def": 80, "cri": 80, "fis": 75}, {"num": 6, "nome": "Fernandinho", "pos": "CDM", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 7, "nome": "G\u00fcndogan", "pos": "CM", "ovr": 85, "atq": 40, "def": 45, "cri": 85, "fis": 82}, {"num": 8, "nome": "De Bruyne", "pos": "CM/CAM", "ovr": 93, "atq": 93, "def": 45, "cri": 93, "fis": 90}, {"num": 9, "nome": "Bernardo Silva", "pos": "RW/CAM", "ovr": 88, "atq": 88, "def": 45, "cri": 88, "fis": 85}, {"num": 10, "nome": "Sterling", "pos": "LW", "ovr": 86, "atq": 86, "def": 45, "cri": 50, "fis": 83}, {"num": 11, "nome": "Ag\u00fcero", "pos": "ST", "ovr": 91, "atq": 91, "def": 45, "cri": 50, "fis": 88}, {"num": 12, "nome": "Bravo", "pos": "GK", "ovr": 76, "atq": 40, "def": 76, "cri": 50, "fis": 75}, {"num": 13, "nome": "Kompany", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 14, "nome": "Otamendi", "pos": "CB", "ovr": 80, "atq": 40, "def": 80, "cri": 50, "fis": 75}, {"num": 15, "nome": "Danilo", "pos": "RB/LB", "ovr": 79, "atq": 40, "def": 79, "cri": 79, "fis": 75}, {"num": 16, "nome": "David Silva", "pos": "CAM", "ovr": 88, "atq": 88, "def": 45, "cri": 88, "fis": 85}, {"num": 17, "nome": "Mahrez", "pos": "RW", "ovr": 85, "atq": 85, "def": 45, "cri": 50, "fis": 82}]}, {"id": 30, "time": "Liverpool", "ano": "2019", "cor": "#cc0000", "texto_cor": "#ffffff", "estilo": "Gegenpressing de Klopp e Velocidade M\u00e1xima", "jogadores": [{"num": 1, "nome": "Alisson", "pos": "GK", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 2, "nome": "Alexander-Arnold", "pos": "RB/RM", "ovr": 87, "atq": 40, "def": 87, "cri": 87, "fis": 84}, {"num": 3, "nome": "Matip", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 4, "nome": "van Dijk", "pos": "CB", "ovr": 93, "atq": 40, "def": 93, "cri": 50, "fis": 90}, {"num": 5, "nome": "Robertson", "pos": "LB", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 6, "nome": "Fabinho", "pos": "CDM", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 7, "nome": "Henderson", "pos": "CM/CDM", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 8, "nome": "Milner", "pos": "CM/LB/RB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 9, "nome": "Salah", "pos": "RW/RM/ST", "ovr": 92, "atq": 92, "def": 45, "cri": 92, "fis": 89}, {"num": 10, "nome": "Man\u00e9", "pos": "LW/LM/ST", "ovr": 90, "atq": 90, "def": 45, "cri": 90, "fis": 87}, {"num": 11, "nome": "Firmino", "pos": "ST/CAM", "ovr": 87, "atq": 87, "def": 45, "cri": 87, "fis": 84}, {"num": 12, "nome": "Mignolet", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 13, "nome": "Gomez", "pos": "CB/RB", "ovr": 79, "atq": 40, "def": 79, "cri": 79, "fis": 75}, {"num": 14, "nome": "Wijnaldum", "pos": "CM/CDM", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 15, "nome": "Ke\u00efta", "pos": "CM/CAM", "ovr": 79, "atq": 79, "def": 45, "cri": 79, "fis": 75}, {"num": 16, "nome": "Shaqiri", "pos": "RW/RM/CAM", "ovr": 80, "atq": 80, "def": 45, "cri": 80, "fis": 75}, {"num": 17, "nome": "Origi", "pos": "ST/LW", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}]}, {"id": 31, "time": "Ajax", "ano": "1972", "cor": "#ffffff", "texto_cor": "#d40000", "estilo": "O Revolucion\u00e1rio Futebol Total de Johan Cruyff", "jogadores": [{"num": 1, "nome": "Stuy", "pos": "GK", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 2, "nome": "Suurbier", "pos": "RB", "ovr": 86, "atq": 40, "def": 86, "cri": 86, "fis": 83}, {"num": 3, "nome": "Hulshoff", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 4, "nome": "Blankenburg", "pos": "CB", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 5, "nome": "Krol", "pos": "LB/CB", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 6, "nome": "Haan", "pos": "CDM/CM", "ovr": 87, "atq": 40, "def": 87, "cri": 87, "fis": 84}, {"num": 7, "nome": "Neeskens", "pos": "CM/CDM", "ovr": 92, "atq": 40, "def": 92, "cri": 92, "fis": 89}, {"num": 8, "nome": "M\u00fchren", "pos": "CM", "ovr": 85, "atq": 40, "def": 45, "cri": 85, "fis": 82}, {"num": 9, "nome": "Swart", "pos": "RW", "ovr": 85, "atq": 85, "def": 45, "cri": 50, "fis": 82}, {"num": 10, "nome": "Cruyff", "pos": "ST/CAM/LW/RW", "ovr": 97, "atq": 97, "def": 45, "cri": 97, "fis": 94}, {"num": 11, "nome": "Keizer", "pos": "LW", "ovr": 89, "atq": 89, "def": 45, "cri": 50, "fis": 86}, {"num": 12, "nome": "Lenz", "pos": "GK", "ovr": 73, "atq": 40, "def": 73, "cri": 50, "fis": 75}, {"num": 13, "nome": "Rep", "pos": "RW/ST", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}, {"num": 14, "nome": "Mulder", "pos": "ST", "ovr": 76, "atq": 76, "def": 45, "cri": 50, "fis": 75}, {"num": 15, "nome": "Kleton", "pos": "CAM", "ovr": 72, "atq": 72, "def": 45, "cri": 72, "fis": 75}, {"num": 16, "nome": "Kras", "pos": "CB", "ovr": 71, "atq": 40, "def": 71, "cri": 50, "fis": 75}, {"num": 17, "nome": "Koster", "pos": "RW", "ovr": 73, "atq": 73, "def": 45, "cri": 50, "fis": 75}]}, {"id": 32, "time": "Benfica", "ano": "1962", "cor": "#ff0000", "texto_cor": "#ffffff", "estilo": "Bicampe\u00f5es da Europa Guiados pelo Pantera", "jogadores": [{"num": 1, "nome": "Pereira", "pos": "GK", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 2, "nome": "Jo\u00e3o", "pos": "RB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 3, "nome": "Germano", "pos": "CB", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 4, "nome": "Martins", "pos": "LB", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 5, "nome": "Cruz", "pos": "CDM", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 6, "nome": "Cav\u00e9m", "pos": "CM/RB", "ovr": 85, "atq": 40, "def": 85, "cri": 85, "fis": 82}, {"num": 7, "nome": "Jos\u00e9 Augusto", "pos": "RW", "ovr": 87, "atq": 87, "def": 45, "cri": 50, "fis": 84}, {"num": 8, "nome": "Santana", "pos": "CAM", "ovr": 84, "atq": 84, "def": 45, "cri": 84, "fis": 81}, {"num": 9, "nome": "\u00c1guas", "pos": "ST", "ovr": 88, "atq": 88, "def": 45, "cri": 50, "fis": 85}, {"num": 10, "nome": "Coluna", "pos": "CM/CAM", "ovr": 92, "atq": 92, "def": 45, "cri": 92, "fis": 89}, {"num": 11, "nome": "Eus\u00e9bio", "pos": "ST/RW", "ovr": 96, "atq": 96, "def": 45, "cri": 50, "fis": 93}, {"num": 12, "nome": "Machado", "pos": "CB", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}, {"num": 13, "nome": "Santos", "pos": "CB", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 14, "nome": "Silva", "pos": "RB", "ovr": 73, "atq": 40, "def": 73, "cri": 73, "fis": 75}, {"num": 15, "nome": "Sim\u00f5es", "pos": "LW", "ovr": 84, "atq": 84, "def": 45, "cri": 50, "fis": 81}, {"num": 16, "nome": "Neto", "pos": "CM", "ovr": 76, "atq": 40, "def": 45, "cri": 76, "fis": 75}, {"num": 17, "nome": "Torres", "pos": "ST", "ovr": 82, "atq": 82, "def": 45, "cri": 50, "fis": 79}]}, {"id": 33, "time": "Bayern", "ano": "1974", "cor": "#dc052d", "texto_cor": "#ffffff", "estilo": "A For\u00e7a Germ\u00e2nica de Beckenbauer e M\u00fcller", "jogadores": [{"num": 1, "nome": "Sepp Maier", "pos": "GK", "ovr": 89, "atq": 40, "def": 89, "cri": 50, "fis": 86}, {"num": 2, "nome": "Hansen", "pos": "RB", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 3, "nome": "Schwarzenbeck", "pos": "CB", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 4, "nome": "Beckenbauer", "pos": "CB/CDM", "ovr": 96, "atq": 40, "def": 96, "cri": 50, "fis": 93}, {"num": 5, "nome": "Breitner", "pos": "LB/CM", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 6, "nome": "Roth", "pos": "CDM", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 7, "nome": "Zobel", "pos": "CM", "ovr": 82, "atq": 40, "def": 45, "cri": 82, "fis": 79}, {"num": 8, "nome": "Hoeness", "pos": "RM/RW", "ovr": 88, "atq": 88, "def": 45, "cri": 88, "fis": 85}, {"num": 9, "nome": "Kapellmann", "pos": "CAM", "ovr": 83, "atq": 83, "def": 45, "cri": 83, "fis": 80}, {"num": 10, "nome": "Gerd M\u00fcller", "pos": "ST", "ovr": 95, "atq": 95, "def": 45, "cri": 50, "fis": 92}, {"num": 11, "nome": "Torstensson", "pos": "LW/ST", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}, {"num": 12, "nome": "Robl", "pos": "GK", "ovr": 73, "atq": 40, "def": 73, "cri": 50, "fis": 75}, {"num": 13, "nome": "Wunder", "pos": "ST", "ovr": 76, "atq": 76, "def": 45, "cri": 50, "fis": 75}, {"num": 14, "nome": "Jensen", "pos": "CB", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 15, "nome": "D\u00fcrnberger", "pos": "LM", "ovr": 80, "atq": 40, "def": 45, "cri": 80, "fis": 75}, {"num": 16, "nome": "Weiss", "pos": "CAM", "ovr": 74, "atq": 74, "def": 45, "cri": 74, "fis": 75}, {"num": 17, "nome": "Gervais", "pos": "RW", "ovr": 72, "atq": 72, "def": 45, "cri": 50, "fis": 75}]}, {"id": 34, "time": "Bayern", "ano": "2013", "cor": "#dc052d", "texto_cor": "#ffffff", "estilo": "A Avassaladora Tr\u00edplice Coroa Europeia", "jogadores": [{"num": 1, "nome": "Neuer", "pos": "GK", "ovr": 91, "atq": 40, "def": 91, "cri": 50, "fis": 88}, {"num": 2, "nome": "Lahm", "pos": "RB/CDM/LB", "ovr": 91, "atq": 40, "def": 91, "cri": 91, "fis": 88}, {"num": 3, "nome": "Boateng", "pos": "CB", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 4, "nome": "Dante", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 5, "nome": "Alaba", "pos": "LB/CM", "ovr": 85, "atq": 40, "def": 85, "cri": 85, "fis": 82}, {"num": 6, "nome": "Schweinsteiger", "pos": "CM", "ovr": 90, "atq": 40, "def": 45, "cri": 90, "fis": 87}, {"num": 7, "nome": "Javi Mart\u00ednez", "pos": "CDM/CB", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 8, "nome": "M\u00fcller", "pos": "CAM/ST/RW", "ovr": 88, "atq": 88, "def": 45, "cri": 88, "fis": 85}, {"num": 9, "nome": "Robben", "pos": "RW/RM", "ovr": 91, "atq": 91, "def": 45, "cri": 91, "fis": 88}, {"num": 11, "nome": "Rib\u00e9ry", "pos": "LW/LM", "ovr": 91, "atq": 91, "def": 45, "cri": 91, "fis": 88}, {"num": 10, "nome": "Mand\u017euki\u0107", "pos": "ST", "ovr": 85, "atq": 85, "def": 45, "cri": 50, "fis": 82}, {"num": 12, "nome": "Starke", "pos": "GK", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 13, "nome": "Van Buyten", "pos": "CB", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 14, "nome": "Rafinha", "pos": "RB", "ovr": 78, "atq": 40, "def": 78, "cri": 78, "fis": 75}, {"num": 15, "nome": "Luiz Gustavo", "pos": "CDM", "ovr": 82, "atq": 40, "def": 82, "cri": 50, "fis": 79}, {"num": 16, "nome": "Kroos", "pos": "CAM/CM", "ovr": 84, "atq": 84, "def": 45, "cri": 84, "fis": 81}, {"num": 17, "nome": "Pizarro", "pos": "ST", "ovr": 81, "atq": 81, "def": 45, "cri": 50, "fis": 78}]}, {"id": 35, "time": "Dortmund", "ano": "2013", "cor": "#fde100", "texto_cor": "#000000", "estilo": "Futebol Heavy Metal de Klopp", "jogadores": [{"num": 1, "nome": "Weidenfeller", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 2, "nome": "Piszczek", "pos": "RB", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 3, "nome": "Suboti\u0107", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 4, "nome": "Hummels", "pos": "CB", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 5, "nome": "Schmelzer", "pos": "LB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 6, "nome": "Bender", "pos": "CDM", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 7, "nome": "G\u00fcndogan", "pos": "CM", "ovr": 86, "atq": 40, "def": 45, "cri": 86, "fis": 83}, {"num": 8, "nome": "B\u0142aszczykowski", "pos": "RW/RM", "ovr": 84, "atq": 84, "def": 45, "cri": 84, "fis": 81}, {"num": 9, "nome": "G\u00f6tze", "pos": "CAM", "ovr": 87, "atq": 87, "def": 45, "cri": 87, "fis": 84}, {"num": 11, "nome": "Reus", "pos": "LW/CAM", "ovr": 88, "atq": 88, "def": 45, "cri": 88, "fis": 85}, {"num": 10, "nome": "Lewandowski", "pos": "ST", "ovr": 90, "atq": 90, "def": 45, "cri": 50, "fis": 87}, {"num": 12, "nome": "Langerak", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "Santana", "pos": "CB", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 14, "nome": "Kehl", "pos": "CDM", "ovr": 79, "atq": 40, "def": 79, "cri": 50, "fis": 75}, {"num": 15, "nome": "Sahin", "pos": "CM", "ovr": 78, "atq": 40, "def": 45, "cri": 78, "fis": 75}, {"num": 16, "nome": "Gro\u00dfkreutz", "pos": "LM/LB/RB", "ovr": 80, "atq": 40, "def": 80, "cri": 80, "fis": 75}, {"num": 17, "nome": "Schieber", "pos": "ST", "ovr": 75, "atq": 75, "def": 45, "cri": 50, "fis": 75}]}, {"id": 36, "time": "Boca Juniors", "ano": "1978", "cor": "#0033aa", "texto_cor": "#ffcc00", "estilo": "Primeiro Bicampeonato da Libertadores", "jogadores": [{"num": 1, "nome": "Gatti", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 2, "nome": "Pern\u00eda", "pos": "RB", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 3, "nome": "S\u00e1", "pos": "CB", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 4, "nome": "Mouzo", "pos": "CB", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 5, "nome": "Bord\u00f3n", "pos": "LB", "ovr": 82, "atq": 40, "def": 82, "cri": 82, "fis": 79}, {"num": 6, "nome": "Ben\u00edtez", "pos": "CM", "ovr": 84, "atq": 40, "def": 45, "cri": 84, "fis": 81}, {"num": 7, "nome": "Su\u00f1\u00e9", "pos": "CDM", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 8, "nome": "Zanabria", "pos": "CAM", "ovr": 85, "atq": 85, "def": 45, "cri": 85, "fis": 82}, {"num": 9, "nome": "Mastr\u00e1ngelo", "pos": "RW", "ovr": 84, "atq": 84, "def": 45, "cri": 50, "fis": 81}, {"num": 10, "nome": "Salinas", "pos": "ST", "ovr": 82, "atq": 82, "def": 45, "cri": 50, "fis": 79}, {"num": 11, "nome": "Perotti", "pos": "LW", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}, {"num": 12, "nome": "Rodr\u00edguez", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "Tesare", "pos": "CB", "ovr": 75, "atq": 40, "def": 75, "cri": 50, "fis": 75}, {"num": 14, "nome": "Alves", "pos": "CM", "ovr": 76, "atq": 40, "def": 45, "cri": 76, "fis": 75}, {"num": 15, "nome": "Veglio", "pos": "CAM/ST", "ovr": 78, "atq": 78, "def": 45, "cri": 78, "fis": 75}, {"num": 16, "nome": "Pav\u00f3n", "pos": "ST", "ovr": 75, "atq": 75, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Palacios", "pos": "RM", "ovr": 74, "atq": 40, "def": 45, "cri": 74, "fis": 75}]}, {"id": 37, "time": "Boca Juniors", "ano": "2000", "cor": "#0033aa", "texto_cor": "#ffcc00", "estilo": "Os Reis de T\u00f3quio sob Reg\u00eancia de Riquelme", "jogadores": [{"num": 1, "nome": "\u00d3scar C\u00f3rdoba", "pos": "GK", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 2, "nome": "Hugo Ibarra", "pos": "RB", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 3, "nome": "Berm\u00fadez", "pos": "CB", "ovr": 86, "atq": 40, "def": 86, "cri": 50, "fis": 83}, {"num": 4, "nome": "Walter Samuel", "pos": "CB", "ovr": 87, "atq": 40, "def": 87, "cri": 50, "fis": 84}, {"num": 5, "nome": "Arruabarrena", "pos": "LB", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 6, "nome": "Battaglia", "pos": "CDM/CM", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 7, "nome": "Serna", "pos": "CDM", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 8, "nome": "Basualdo", "pos": "CM/RM", "ovr": 83, "atq": 40, "def": 45, "cri": 83, "fis": 80}, {"num": 10, "nome": "Riquelme", "pos": "CAM", "ovr": 94, "atq": 94, "def": 45, "cri": 94, "fis": 91}, {"num": 9, "nome": "Delgado", "pos": "ST/RW", "ovr": 84, "atq": 84, "def": 45, "cri": 50, "fis": 81}, {"num": 11, "nome": "Palermo", "pos": "ST", "ovr": 88, "atq": 88, "def": 45, "cri": 50, "fis": 85}, {"num": 12, "nome": "Abbondanzieri", "pos": "GK", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 13, "nome": "Burdisso", "pos": "CB", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}, {"num": 14, "nome": "Matell\u00e1n", "pos": "CB/LB", "ovr": 78, "atq": 40, "def": 78, "cri": 78, "fis": 75}, {"num": 15, "nome": "Schelotto", "pos": "RW/ST", "ovr": 82, "atq": 82, "def": 45, "cri": 50, "fis": 79}, {"num": 16, "nome": "Barijho", "pos": "ST", "ovr": 78, "atq": 78, "def": 45, "cri": 50, "fis": 75}, {"num": 17, "nome": "Traverso", "pos": "CDM/CB", "ovr": 77, "atq": 40, "def": 77, "cri": 50, "fis": 75}]}, {"id": 38, "time": "River Plate", "ano": "1996", "cor": "#ffffff", "texto_cor": "#ff0000", "estilo": "Os Milion\u00e1rios de Francescoli e Crespo", "jogadores": [{"num": 1, "nome": "Burgos", "pos": "GK", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 2, "nome": "Hern\u00e1n D\u00edaz", "pos": "RB", "ovr": 83, "atq": 40, "def": 83, "cri": 83, "fis": 80}, {"num": 3, "nome": "Ayala", "pos": "CB", "ovr": 84, "atq": 40, "def": 84, "cri": 50, "fis": 81}, {"num": 4, "nome": "Rivarola", "pos": "CB", "ovr": 82, "atq": 40, "def": 82, "cri": 50, "fis": 79}, {"num": 5, "nome": "Sor\u00edn", "pos": "LB", "ovr": 85, "atq": 40, "def": 85, "cri": 85, "fis": 82}, {"num": 6, "nome": "Astrada", "pos": "CDM", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 7, "nome": "Almeyda", "pos": "CDM/CM", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 8, "nome": "Ortega", "pos": "CAM/RW", "ovr": 89, "atq": 89, "def": 45, "cri": 89, "fis": 86}, {"num": 10, "nome": "Francescoli", "pos": "CAM/ST", "ovr": 93, "atq": 93, "def": 45, "cri": 93, "fis": 90}, {"num": 9, "nome": "Gallardo", "pos": "CAM", "ovr": 83, "atq": 83, "def": 45, "cri": 83, "fis": 80}, {"num": 11, "nome": "Crespo", "pos": "ST", "ovr": 86, "atq": 86, "def": 45, "cri": 50, "fis": 83}, {"num": 12, "nome": "Irigoyt\u00eda", "pos": "GK", "ovr": 74, "atq": 35, "def": 74, "cri": 45, "fis": 74}, {"num": 13, "nome": "Gomez", "pos": "CB", "ovr": 75, "atq": 35, "def": 75, "cri": 45, "fis": 74}, {"num": 14, "nome": "Altamirano", "pos": "LB", "ovr": 76, "atq": 35, "def": 76, "cri": 45, "fis": 74}, {"num": 15, "nome": "Escudero", "pos": "CM", "ovr": 76, "atq": 35, "def": 40, "cri": 76, "fis": 74}, {"num": 16, "nome": "Amato", "pos": "ST", "ovr": 79, "atq": 79, "def": 40, "cri": 45, "fis": 74}, {"num": 17, "nome": "Cruz", "pos": "ST", "ovr": 78, "atq": 78, "def": 40, "cri": 45, "fis": 74}]}, {"id": 39, "time": "River Plate", "ano": "2018", "cor": "#ffffff", "texto_cor": "#ff0000", "estilo": "Gl\u00f3ria Eterna de Gallardo em Madri", "jogadores": [{"num": 1, "nome": "Armani", "pos": "GK", "ovr": 85, "atq": 40, "def": 85, "cri": 50, "fis": 82}, {"num": 2, "nome": "Montiel", "pos": "RB", "ovr": 81, "atq": 40, "def": 81, "cri": 81, "fis": 78}, {"num": 3, "nome": "Maidana", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 4, "nome": "Pinola", "pos": "CB", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 5, "nome": "Casco", "pos": "LB", "ovr": 80, "atq": 40, "def": 80, "cri": 80, "fis": 75}, {"num": 6, "nome": "Ponzio", "pos": "CDM", "ovr": 83, "atq": 40, "def": 83, "cri": 50, "fis": 80}, {"num": 7, "nome": "Enzo P\u00e9rez", "pos": "CM/CDM", "ovr": 84, "atq": 40, "def": 84, "cri": 84, "fis": 81}, {"num": 8, "nome": "Palacios", "pos": "CM", "ovr": 82, "atq": 40, "def": 45, "cri": 82, "fis": 79}, {"num": 9, "nome": "Pity Mart\u00ednez", "pos": "CAM/LW/RW", "ovr": 85, "atq": 85, "def": 45, "cri": 85, "fis": 82}, {"num": 10, "nome": "Quintero", "pos": "CAM", "ovr": 84, "atq": 84, "def": 45, "cri": 84, "fis": 81}, {"num": 11, "nome": "Pratto", "pos": "ST", "ovr": 83, "atq": 83, "def": 45, "cri": 50, "fis": 80}, {"num": 12, "nome": "Lux", "pos": "GK", "ovr": 74, "atq": 40, "def": 74, "cri": 50, "fis": 75}, {"num": 13, "nome": "Quarta", "pos": "CB", "ovr": 78, "atq": 40, "def": 78, "cri": 50, "fis": 75}, {"num": 14, "nome": "Mayada", "pos": "RB", "ovr": 76, "atq": 40, "def": 76, "cri": 76, "fis": 75}, {"num": 15, "nome": "Nacho F.", "pos": "CM/CAM", "ovr": 82, "atq": 82, "def": 45, "cri": 82, "fis": 79}, {"num": 16, "nome": "De La Cruz", "pos": "CAM", "ovr": 79, "atq": 79, "def": 45, "cri": 79, "fis": 75}, {"num": 17, "nome": "Scocco", "pos": "ST", "ovr": 80, "atq": 80, "def": 45, "cri": 50, "fis": 75}]}];
-
-        const schemes = {
-            "433": [
-                {pos: "GK", x: 50, y: 7}, {pos: "LB", x: 15, y: 25}, {pos: "CB", x: 38, y: 22}, {pos: "CB", x: 62, y: 22}, {pos: "RB", x: 85, y: 25},
-                {pos: "CDM", x: 50, y: 45}, {pos: "CM", x: 35, y: 62}, {pos: "CAM", x: 65, y: 65},
-                {pos: "LW", x: 15, y: 85}, {pos: "ST", x: 50, y: 88}, {pos: "RW", x: 85, y: 85}
-            ],
-            "442": [
-                {pos: "GK", x: 50, y: 7}, {pos: "LB", x: 15, y: 25}, {pos: "CB", x: 38, y: 22}, {pos: "CB", x: 62, y: 22}, {pos: "RB", x: 85, y: 25},
-                {pos: "LM", x: 15, y: 55}, {pos: "CM", x: 38, y: 52}, {pos: "CM", x: 62, y: 52}, {pos: "RM", x: 85, y: 55},
-                {pos: "ST", x: 40, y: 85}, {pos: "ST", x: 60, y: 85}
-            ],
-            "422_def": [
-                {pos: "GK", x: 50, y: 7}, {pos: "LB", x: 15, y: 25}, {pos: "CB", x: 38, y: 22}, {pos: "CB", x: 62, y: 22}, {pos: "RB", x: 85, y: 25},
-                {pos: "CDM", x: 38, y: 45}, {pos: "CDM", x: 62, y: 45}, {pos: "LM", x: 15, y: 65}, {pos: "RM", x: 85, y: 65},
-                {pos: "ST", x: 40, y: 85}, {pos: "ST", x: 60, y: 85}
-            ],
-            "433_of": [
-                {pos: "GK", x: 50, y: 7}, {pos: "LB", x: 15, y: 25}, {pos: "CB", x: 38, y: 22}, {pos: "CB", x: 62, y: 22}, {pos: "RB", x: 85, y: 25},
-                {pos: "CM", x: 35, y: 52}, {pos: "CM", x: 65, y: 52}, {pos: "CAM", x: 50, y: 68},
-                {pos: "LW", x: 15, y: 85}, {pos: "ST", x: 50, y: 88}, {pos: "RW", x: 85, y: 85}
-            ],
-            "433_def": [
-                {pos: "GK", x: 50, y: 7}, {pos: "LB", x: 15, y: 25}, {pos: "CB", x: 38, y: 22}, {pos: "CB", x: 62, y: 22}, {pos: "RB", x: 85, y: 25},
-                {pos: "CDM", x: 35, y: 45}, {pos: "CDM", x: 65, y: 45}, {pos: "CM", x: 50, y: 62},
-                {pos: "LW", x: 15, y: 85}, {pos: "ST", x: 50, y: 88}, {pos: "RW", x: 85, y: 85}
-            ],
-            "4231": [
-                {pos: "GK", x: 50, y: 7}, {pos: "LB", x: 15, y: 25}, {pos: "CB", x: 38, y: 22}, {pos: "CB", x: 62, y: 22}, {pos: "RB", x: 85, y: 25},
-                {pos: "CDM", x: 38, y: 45}, {pos: "CDM", x: 62, y: 45},
-                {pos: "LM", x: 15, y: 68}, {pos: "CAM", x: 50, y: 70}, {pos: "RM", x: 85, y: 68},
-                {pos: "ST", x: 50, y: 88}
-            ],
-            "424": [
-                {pos: "GK", x: 50, y: 7}, {pos: "LB", x: 15, y: 25}, {pos: "CB", x: 38, y: 22}, {pos: "CB", x: 62, y: 22}, {pos: "RB", x: 85, y: 25},
-                {pos: "CM", x: 38, y: 50}, {pos: "CM", x: 62, y: 50},
-                {pos: "LW", x: 15, y: 82}, {pos: "ST", x: 40, y: 85}, {pos: "ST", x: 60, y: 85}, {pos: "RW", x: 85, y: 82}
-            ],
-            "343": [
-                {pos: "GK", x: 50, y: 7}, {pos: "CB", x: 25, y: 22}, {pos: "CB", x: 50, y: 20}, {pos: "CB", x: 75, y: 22},
-                {pos: "LM", x: 15, y: 52}, {pos: "CM", x: 38, y: 50}, {pos: "CM", x: 62, y: 50}, {pos: "RM", x: 85, y: 52},
-                {pos: "LW", x: 18, y: 82}, {pos: "ST", x: 50, y: 85}, {pos: "RW", x: 82, y: 82}
-            ],
-            "532": [
-                {pos: "GK", x: 50, y: 7}, {pos: "LB", x: 12, y: 30}, {pos: "CB", x: 30, y: 22}, {pos: "CB", x: 50, y: 20}, {pos: "CB", x: 70, y: 22}, {pos: "RB", x: 88, y: 30},
-                {pos: "CDM", x: 50, y: 48}, {pos: "CM", x: 35, y: 62}, {pos: "CM", x: 65, y: 62},
-                {pos: "ST", x: 40, y: 85}, {pos: "ST", x: 60, y: 85}
-            ],
-            "541": [
-                {pos: "GK", x: 50, y: 7}, {pos: "LB", x: 12, y: 30}, {pos: "CB", x: 30, y: 22}, {pos: "CB", x: 50, y: 20}, {pos: "CB", x: 70, y: 22}, {pos: "RB", x: 88, y: 30},
-                {pos: "LM", x: 15, y: 58}, {pos: "CM", x: 38, y: 55}, {pos: "CM", x: 62, y: 55}, {pos: "RM", x: 85, y: 58},
-                {pos: "ST", x: 50, y: 85}
-            ]
-        };
-
-        let activeScheme = "433";
-        let activeMode = "normal";
-        let currentDrawnTeam = null;
-        let skipsLeft = 3;
-        let userLineup = []; 
-        let activeSlotIndex = null;
-
-        const fieldEl = document.getElementById("football-field");
-        const checklistEl = document.getElementById("lineup-checklist-element");
-        const selectSchemeEl = document.getElementById("select-scheme");
-        const selectModeEl = document.getElementById("select-mode");
-        const btnDrawTeam = document.getElementById("btn-draw-team");
-        const btnSkipTeam = document.getElementById("btn-skip-team");
-        const txtSkips = document.getElementById("txt-skips");
-        const btnSimulate = document.getElementById("btn-simulate");
-
-        function init() {
-            renderField();
-            renderChecklist();
-            updateTacticBars();
-            
-            selectSchemeEl.addEventListener("change", (e) => {
-                if(userLineup.length > 0) {
-                    if(!confirm("Mudar o esquema tático irá resetar seu progresso atual. Deseja continuar?")) {
-                        selectSchemeEl.value = activeScheme;
-                        return;
-                    }
-                }
-                activeScheme = e.target.value;
-                resetDraft();
-            });
-
-            selectModeEl.addEventListener("change", (e) => {
-                activeMode = e.target.value;
-                skipsLeft = activeMode === "normal" ? 3 : 1;
-                txtSkips.innerText = skipsLeft;
-                resetDraft();
-            });
-
-            btnDrawTeam.addEventListener("click", drawTeam);
-            btnSkipTeam.addEventListener("click", skipTeam);
-            btnSimulate.addEventListener("click", startTournamentCampaign);
-            
-            // Adicionado listener the run
-            document.getElementById("btn-reveal-first").addEventListener("click", runNextMatch);
-        }
-
-        function resetDraft() {
-            userLineup = [];
-            currentDrawnTeam = null;
-            activeSlotIndex = null;
-            document.getElementById("drawn-card-area").style.display = "none";
-            document.getElementById("player-selection-list").innerHTML = '<p style="color:#666; text-align:center; margin-top:40px; font-size:14px; text-transform:uppercase;">Sorteie um clube para revelar os jogadores.</p>';
-            renderField();
-            renderChecklist();
-            updateTacticBars();
-            btnSimulate.style.display = "none";
-            btnSkipTeam.style.display = "none";
-            btnDrawTeam.style.display = "inline-block";
-        }
-
-        function renderField() {
-            const slots = fieldEl.querySelectorAll(".slot");
-            slots.forEach(s => s.remove());
-
-            schemes[activeScheme].forEach((p, idx) => {
-                const slotEl = document.createElement("div");
-                slotEl.classList.add("slot");
-                slotEl.style.left = `${p.x}%`;
-                slotEl.style.bottom = `${p.y}%`;
-                slotEl.dataset.index = idx;
-
-                const filled = userLineup.find(l => l.slotIndex === idx);
-                if(filled) {
-                    slotEl.classList.add("filled");
-                    slotEl.innerHTML = `<span class="slot-pos">${filled.assignedPos}</span><span class="slot-name">${filled.player.nome}</span>`;
-                } else {
-                    slotEl.innerHTML = `<span class="slot-pos">${p.pos}</span>`;
-                }
-
-                if(activeSlotIndex === idx) slotEl.classList.add("active");
-
-                slotEl.addEventListener("click", () => {
-                    if(userLineup.find(l => l.slotIndex === idx)) return; 
-                    activeSlotIndex = idx;
-                    renderField();
-                    if(currentDrawnTeam) renderPlayerList();
-                });
-                fieldEl.appendChild(slotEl);
-            });
-        }
-
-        function renderChecklist() {
-            checklistEl.innerHTML = "";
-            schemes[activeScheme].forEach((p, idx) => {
-                const item = document.createElement("div");
-                item.classList.add("checklist-item");
-                
-                const filled = userLineup.find(l => l.slotIndex === idx);
-                if(filled) {
-                    item.classList.add("filled");
-                    const ovrDisplay = activeMode === "normal" ? filled.player.ovr : "??";
-                    item.innerHTML = `<span class="pos">[${p.pos}]</span> <span class="name">#${filled.player.num} ${filled.player.nome}</span> <span style="color:#d4af37; font-weight:bold;">${ovrDisplay}</span>`;
-                } else {
-                    item.innerHTML = `<span class="pos">[${p.pos}]</span> <span class="name">-- Vazio --</span> <span>--</span>`;
-                }
-                checklistEl.appendChild(item);
-            });
-            document.getElementById("txt-box-score-count").innerText = `${userLineup.length} / 11`;
-            if(userLineup.length === 11) btnSimulate.style.display = "block";
-        }
-
-        function drawTeam() {
-            if(userLineup.length === 11) return;
-            
-            if(currentDrawnTeam !== null) {
-                skipTeam();
-                return;
-            }
-
-            const randIdx = Math.floor(Math.random() * db.length);
-            currentDrawnTeam = db[randIdx];
-
-            document.getElementById("drawn-card-area").style.display = "block";
-            const jersey = document.getElementById("drawn-jersey");
-            jersey.style.backgroundColor = currentDrawnTeam.cor;
-            jersey.style.color = currentDrawnTeam.texto_cor;
-            
-            document.getElementById("drawn-team-name").innerText = currentDrawnTeam.time;
-            document.getElementById("drawn-team-year").innerText = currentDrawnTeam.ano;
-            document.getElementById("drawn-team-style").innerText = currentDrawnTeam.estilo;
-
-            btnDrawTeam.style.display = "none";
-            btnSkipTeam.style.display = "inline-block";
-
-            renderPlayerList();
-        }
-
-        function skipTeam() {
-            if(skipsLeft <= 0) { 
-                alert("Você gastou todos os pulos! Deve escolher obrigatoriamente um jogador deste elenco."); 
-                return; 
-            }
-            skipsLeft--;
-            txtSkips.innerText = skipsLeft;
-            currentDrawnTeam = null; 
-            drawTeam();
-        }
-
-        function renderPlayerList() {
-            const listContainer = document.getElementById("player-selection-list");
-            listContainer.innerHTML = "";
-
-            if(!currentDrawnTeam) return;
-
-            const title = document.createElement("h3");
-            title.innerText = "Escolha um jogador do elenco:";
-            title.style.fontSize = "13px";
-            title.style.marginBottom = "10px";
-            title.style.color = "#d4af37";
-            listContainer.appendChild(title);
-
-            currentDrawnTeam.jogadores.forEach(player => {
-                const row = document.createElement("div");
-                row.classList.add("player-row");
-
-                const openPositions = schemes[activeScheme].filter((p, i) => !userLineup.some(l => l.slotIndex === i));
-                const playerPositions = player.pos.split("/");
-                const matchingPositions = playerPositions.filter(pos => openPositions.some(op => op.pos === pos));
-                
-                if(matchingPositions.length === 0) row.classList.add("disabled");
-
-                const ovrText = activeMode === "normal" ? player.ovr : "??";
-
-                row.innerHTML = `
-                    <div class="player-info">
-                        <span class="player-num">#${player.num}</span>
-                        <div class="player-text">
-                            <span class="player-name">${player.nome}</span>
-                            <span class="player-pos">${player.pos}</span>
-                        </div>
-                    </div>
-                    <span class="player-ovr">${ovrText}</span>
-                `;
-
-                row.addEventListener("click", () => {
-                    if(matchingPositions.length === 0) return;
-                    
-                    if(matchingPositions.length === 1) {
-                        const targetSlot = schemes[activeScheme].findIndex((p, i) => p.pos === matchingPositions[0] && !userLineup.some(l => l.slotIndex === i));
-                        assignPlayerToSlot(player, targetSlot, matchingPositions[0]);
-                    } else {
-                        showPosSelectPopup(player, matchingPositions, row);
-                    }
-                });
-                listContainer.appendChild(row);
-            });
-        }
-
-        function showPosSelectPopup(player, matchPositions, anchorEl) {
-            const popup = document.getElementById("pos-select-popup");
-            const container = document.getElementById("popup-pos-buttons-container");
-            container.innerHTML = "";
-
-            matchPositions.forEach(pos => {
-                const btn = document.createElement("button");
-                btn.innerText = pos;
-                btn.addEventListener("click", () => {
-                    const targetSlot = schemes[activeScheme].findIndex((p, i) => p.pos === pos && !userLineup.some(l => l.slotIndex === i));
-                    assignPlayerToSlot(player, targetSlot, pos);
-                    popup.style.display = "none";
-                });
-                container.appendChild(btn);
-            });
-
-            const rect = anchorEl.getBoundingClientRect();
-            popup.style.top = `${window.scrollY + rect.top - 60}px`;
-            popup.style.left = `${window.scrollX + rect.left + 20}px`;
-            popup.style.display = "block";
-        }
-
-        function assignPlayerToSlot(player, slotIndex, positionName) {
-            userLineup.push({ slotIndex, player, assignedPos: positionName });
-            currentDrawnTeam = null; 
-            activeSlotIndex = null;
-            document.getElementById("drawn-card-area").style.display = "none";
-            document.getElementById("player-selection-list").innerHTML = '<p style="color:#666; text-align:center; margin-top:40px; font-size:14px; text-transform:uppercase;">Escalado! Sorteie o próximo clube.</p>';
-            
-            btnDrawTeam.style.display = "inline-block";
-            btnSkipTeam.style.display = "none";
-
-            renderField();
-            renderChecklist();
-            updateTacticBars();
-        }
-
-        function updateTacticBars() {
-            const barsArea = document.getElementById("tactics-bars-area");
-            
-            if(userLineup.length < 11) {
-                barsArea.style.display = "none";
-                return;
-            }
-            
-            barsArea.style.display = "flex";
-
-            let sumAtq = 0, countAtq = 0, sumCri = 0, countCri = 0, sumPro = 0, countPro = 0, sumDef = 0, countDef = 0;
-
-            userLineup.forEach(l => {
-                const p = l.player;
-                const pos = l.assignedPos;
-                if(["ST", "LW", "RW"].includes(pos)) { sumAtq += p.atq; countAtq++; }
-                if(["CAM", "CM", "RM", "LM"].includes(pos)) { sumCri += p.cri; countCri++; }
-                if(["CDM", "CM"].includes(pos)) { sumPro += p.def; countPro++; }
-                if(["CB", "LB", "RB"].includes(pos)) { sumDef += p.def; countDef++; }
-            });
-
-            let atqSector = countAtq > 0 ? Math.round(sumAtq / countAtq) : 40;
-            let criSector = countCri > 0 ? Math.round(sumCri / countCri) : 40;
-            let proSector = countPro > 0 ? Math.round(sumPro / countPro) : 30; 
-            let defSector = countDef > 0 ? Math.round(sumDef / countDef) : 40;
-
-            defSector = Math.round(defSector + (proSector * 0.15));
-            if(proSector < 55) defSector = Math.round(defSector * 0.8); 
-
-            setBar("atq", Math.min(atqSector, 99));
-            setBar("cri", Math.min(criSector, 99));
-            setBar("pro", Math.min(proSector, 99));
-            setBar("def", Math.min(defSector, 99));
-        }
-
-        function setBar(id, val) {
-            document.getElementById(`bar-${id}`).style.width = `${val}%`;
-            document.getElementById(`val-${id}`).innerText = val;
-        }
-
-        // =====================================
-        // MOTOR CAMPEONATO THE RUN
-        // =====================================
-        let tournamentStage = 0; 
-        let opponentsPool = [];
-        let groupTeams = [];
-        let matchTickerInterval = null;
-
-        function startTournamentCampaign() {
-            if(activeMode === "craque") { activeMode = "normal"; renderChecklist(); }
-
-            opponentsPool = [];
-            const copyDb = [...db];
-            for(let i=0; i<7; i++) {
-                const r = Math.floor(Math.random() * copyDb.length);
-                opponentsPool.push(copyDb.splice(r, 1)[0]);
-            }
-
-            groupTeams = [
-                { name: "Sua Seleção", points: 0, v: 0, e: 0, d: 0, gf: 0, gs: 0, isUser: true },
-                { name: `${opponentsPool[0].time} ${opponentsPool[0].ano}`, points: 0, v: 0, e: 0, d: 0, gf: 0, gs: 0, dbRef: opponentsPool[0] },
-                { name: `${opponentsPool[1].time} ${opponentsPool[1].ano}`, points: 0, v: 0, e: 0, d: 0, gf: 0, gs: 0, dbRef: opponentsPool[1] },
-                { name: `${opponentsPool[2].time} ${opponentsPool[2].ano}`, points: 0, v: 0, e: 0, d: 0, gf: 0, gs: 0, dbRef: opponentsPool[2] }
-            ];
-
-            tournamentStage = 0;
-            
-            // Esconde UI de Draft e mostra "The Run"
-            document.getElementById("draft-view").style.display = "none";
-            document.getElementById("simulation-view").style.display = "block";
-            document.getElementById("standings-panel").style.display = "block";
-            document.getElementById("btn-reveal-first").style.display = "block";
-            
-            renderStandings();
-        }
-
-        function renderStandings() {
-            groupTeams.sort((a,b) => b.points - a.points || (b.gf - b.gs) - (a.gf - a.gs) || b.gf - a.gf);
-            const tbody = document.getElementById("standings-tbody");
-            tbody.innerHTML = "";
-            groupTeams.forEach(t => {
-                const tr = document.createElement("tr");
-                if(t.isUser) tr.classList.add("user-row");
-                tr.innerHTML = `<td class="t-name">${t.name}</td><td>${t.points}</td><td>${t.v}</td><td>${t.gf - t.gs}</td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function getTeamStats(teamObj) {
-            if(teamObj.isUser) {
-                return {
-                    atq: parseInt(document.getElementById("val-atq").innerText),
-                    cri: parseInt(document.getElementById("val-cri").innerText),
-                    pro: parseInt(document.getElementById("val-pro").innerText),
-                    def: parseInt(document.getElementById("val-def").innerText),
-                    gk: userLineup.find(l => l.assignedPos === "GK").player.ovr,
-                    nome: "Sua Seleção", jogadores: userLineup.map(l => l.player)
-                };
-            } else {
-                let sum = 0; teamObj.dbRef.jogadores.forEach(j => sum += j.ovr);
-                let avg = Math.round(sum / 17);
-                let gkObj = teamObj.dbRef.jogadores.find(j => j.pos === "GK") || {ovr: 85};
-                return {
-                    atq: avg, cri: avg, pro: avg, def: avg, gk: gkObj.ovr,
-                    nome: teamObj.name, jogadores: teamObj.dbRef.jogadores
-                };
-            }
-        }
-
-        // Inicia a próxima partida na UI "The Run"
-        function runNextMatch() {
-            // Remove o botão anterior
-            const btnReveal = document.getElementById("btn-reveal-first") || document.querySelector(".btn-reveal-match");
-            if(btnReveal) btnReveal.remove();
-
-            // Determina Fase e Oponente
-            let isKnockout = tournamentStage >= 3;
-            let opponent = isKnockout ? 
-                { name: `${opponentsPool[tournamentStage].time} ${opponentsPool[tournamentStage].ano}`, isUser: false, dbRef: opponentsPool[tournamentStage] } : 
-                groupTeams[tournamentStage + 1];
-
-            let stageName = isKnockout ? ["OITAVAS", "QUARTAS", "SEMIFINAL", "FINAL"][tournamentStage - 3] : "FASE DE GRUPOS";
-            if (isKnockout) document.getElementById("standings-panel").style.display = "none";
-
-            // Cria o Card da Partida
-            const matchesList = document.getElementById("matches-list");
-            const matchId = `match-${tournamentStage}`;
-            
-            const matchHTML = `
-                <div class="match-card" id="${matchId}">
-                    <div class="match-main-row">
-                        <div class="match-info-left">
-                            <span class="match-stage">${stageName}</span>
-                            <span class="match-opponent"><span>vs AT</span> ${opponent.name}</span>
-                        </div>
-                        <div class="match-info-right">
-                            <span class="match-score" id="score-${matchId}">0 - 0</span>
-                            <span class="match-timer" id="timer-${matchId}">1'</span>
-                        </div>
-                    </div>
-                    <div class="match-timeline" id="timeline-${matchId}"></div>
-                    <div class="match-summary" id="summary-${matchId}"></div>
-                </div>
-            `;
-            matchesList.insertAdjacentHTML('beforeend', matchHTML);
-            window.scrollTo(0, document.body.scrollHeight);
-
-            // Simula o jogo
-            simulateMatchTheRunStyle(matchId, groupTeams[0], opponent, isKnockout, (userScore, oppScore, uGoals, oGoals) => {
-                // Ao terminar o jogo
-                const timerEl = document.getElementById(`timer-${matchId}`);
-                
-                // Trata pontos de grupo
-                if(!isKnockout) {
-                    updateTeamRow(groupTeams[0], userScore, oppScore);
-                    updateTeamRow(opponent, oppScore, userScore);
-                    // Jogos invisíveis dos bots
-                    let botA = groupTeams[tournamentStage === 0 ? 2 : tournamentStage === 1 ? 3 : 1];
-                    let botB = groupTeams[tournamentStage === 0 ? 3 : tournamentStage === 1 ? 1 : 2];
-                    updateTeamRow(botA, Math.floor(Math.random()*3), Math.floor(Math.random()*3));
-                    renderStandings();
-                }
-
-                // Lógica de Sucesso/Falha
-                let userProceeds = false;
-                if(!isKnockout) {
-                    if (tournamentStage === 2) {
-                        renderStandings();
-                        userProceeds = groupTeams.findIndex(t => t.isUser) <= 1;
-                    } else {
-                        userProceeds = true; // Só avança jogo de grupo normal
-                    }
-                } else {
-                    userProceeds = userScore > oppScore;
-                }
-
-                // Update visual checkmark
-                if ((!isKnockout && userProceeds) || (isKnockout && userProceeds)) {
-                    timerEl.innerText = "✓";
-                    timerEl.className = "match-timer ended";
-                } else {
-                    timerEl.innerText = "✗";
-                    timerEl.className = "match-timer ended-loss";
-                }
-
-                // Cria o summary com os autores
-                const summaryEl = document.getElementById(`summary-${matchId}`);
-                summaryEl.innerText = `GOLS: ${uGoals.join(", ") || "Nenhum"} | SOFRIDOS: ${oGoals.join(", ") || "Nenhum"}`;
-
-                tournamentStage++;
-
-                // Lógica de Fim de Torneio ou Próximo Jogo
-                if (tournamentStage === 7 && userProceeds) {
-                    const btn = document.createElement("button");
-                    btn.className = "btn-reveal-match";
-                    btn.style.background = "#d4af37";
-                    btn.style.color = "#121212";
-                    btn.innerText = "🏆 CAMPEÃO INVICTO!";
-                    matchesList.appendChild(btn);
-                    setTimeout(() => { alert("Você entrou para a história do 6 A 7!"); }, 500);
-                } else if (!userProceeds && (tournamentStage === 3 || isKnockout)) {
-                    const btn = document.createElement("button");
-                    btn.className = "btn-reveal-match";
-                    btn.style.background = "#1e1e1e";
-                    btn.style.border = "1px solid #cc0000";
-                    btn.innerText = "ELIMINADO";
-                    matchesList.appendChild(btn);
-                } else {
-                    const btn = document.createElement("button");
-                    btn.className = "btn-reveal-match";
-                    btn.innerText = "PRÓXIMO JOGO →";
-                    btn.onclick = () => {
-                        // Collapse
-                        document.getElementById(`timeline-${matchId}`).style.display = "none";
-                        summaryEl.style.display = "block";
-                        runNextMatch();
-                    };
-                    matchesList.appendChild(btn);
-                }
-                window.scrollTo(0, document.body.scrollHeight);
-            });
-        }
-
-        function simulateMatchTheRunStyle(matchId, homeTeam, awayTeam, isKnockout, onComplete) {
-            const h = getTeamStats(homeTeam); const a = getTeamStats(awayTeam);
-            const scoreEl = document.getElementById(`score-${matchId}`);
-            const timerEl = document.getElementById(`timer-${matchId}`);
-            const timelineEl = document.getElementById(`timeline-${matchId}`);
-
-            let minute = 1, hScore = 0, aScore = 0;
-            let uGoals = []; let oGoals = [];
-
-            matchTickerInterval = setInterval(() => {
-                if(minute > 90) {
-                    clearInterval(matchTickerInterval);
-                    if(isKnockout && hScore === aScore) { 
-                        if(Math.random() > 0.5) hScore++; else aScore++; 
-                        scoreEl.innerText = `${hScore} - ${aScore}`;
-                    }
-                    onComplete(hScore, aScore, uGoals, oGoals);
-                    return;
-                }
-
-                // Chance de Perigo (11%)
-                if(Math.random() < 0.11) {
-                    let pHome = (h.cri + h.pro) / (h.cri + h.pro + a.cri + a.pro);
-                    if(Math.random() < pHome) {
-                        if(Math.random() * 100 <= (45 + (h.atq - a.def)/2)) {
-                            if(Math.random() * 100 <= (35 + h.atq - a.gk)) {
-                                hScore++;
-                                let autor = h.jogadores[Math.floor(Math.random()*h.jogadores.length)].nome;
-                                uGoals.push(autor);
-                                appendTimelineEvent(timelineEl, minute, autor, true);
-                            }
-                        }
-                    } else {
-                        if(Math.random() * 100 <= (45 + (a.atq - h.def)/2)) {
-                            if(Math.random() * 100 <= (35 + a.atq - h.gk)) {
-                                aScore++;
-                                let autor = a.jogadores[Math.floor(Math.random()*a.jogadores.length)].nome;
-                                oGoals.push(autor);
-                                appendTimelineEvent(timelineEl, minute, autor, false);
-                            }
-                        }
-                    }
-                }
-                
-                scoreEl.innerText = `${hScore} - ${aScore}`;
-                timerEl.innerText = `${minute}'`;
-                minute++;
-            }, 50); // 50ms = 4.5 segundos a partida inteira
-        }
-
-        function appendTimelineEvent(container, minute, player, isUser) {
-            const div = document.createElement("div");
-            div.className = `timeline-event ${isUser ? 'event-user' : 'event-opp'}`;
-            div.innerHTML = `<span class="event-time">${minute}'</span> <span class="event-player">${player}</span>`;
-            container.appendChild(div);
-        }
-
-        function updateTeamRow(t, gf, gs) {
-            t.gf += gf; t.gs += gs;
-            if(gf > gs) t.points += 3; else if(gf === gs) t.points += 1;
-        }
-
-        window.onload = init;
-    </script>
-</body>
-</html>
+        // BASE DE DADOS OFICIAL E COMPACTADA - TODOS OS 40 TIMES COM 17 JOGADORES REAIS HISTÓRICOS
+        const db = [{"id":0,"time":"Santos","ano":"1962","cor":"#ffffff","texto_cor":"#000000","estilo":"Ataque Total e Tabelas R\u00e1pidas","jogadores":[{"num":1,"nome":"Gylmar","pos":"GK","ovr":92,"atq":40,"def":92,"cri":50,"fis":89},{"num":2,"nome":"Lima","pos":"RB/LB/CM/CDM","ovr":86,"atq":40,"def":86,"cri":86,"fis":83},{"num":3,"nome":"Mauro Ramos","pos":"CB","ovr":91,"atq":40,"def":91,"cri":50,"fis":88},{"num":4,"nome":"Calvet","pos":"CB","ovr":87,"atq":40,"def":87,"cri":50,"fis":84},{"num":6,"nome":"Dalmo","pos":"LB","ovr":84,"atq":40,"def":84,"cri":84,"fis":81},{"num":5,"nome":"Zito","pos":"CDM/CM","ovr":91,"atq":40,"def":91,"cri":91,"fis":88},{"num":8,"nome":"Meng\u00e1lvio","pos":"CM","ovr":86,"atq":40,"def":45,"cri":86,"fis":83},{"num":7,"nome":"Dorval","pos":"RW/RM","ovr":87,"atq":87,"def":45,"cri":87,"fis":84},{"num":9,"nome":"Coutinho","pos":"ST","ovr":93,"atq":93,"def":45,"cri":50,"fis":90},{"num":10,"nome":"Pel\u00e9","pos":"ST/CAM/RW","ovr":99,"atq":99,"def":45,"cri":99,"fis":96},{"num":11,"nome":"Pepe","pos":"LW/LM","ovr":90,"atq":90,"def":45,"cri":90,"fis":87},{"num":12,"nome":"La\u00e9rcio","pos":"GK","ovr":78,"atq":40,"def":78,"cri":50,"fis":75},{"num":13,"nome":"Olavo","pos":"CB","ovr":79,"atq":40,"def":79,"cri":50,"fis":75},{"num":14,"nome":"Formiga","pos":"CDM/CM","ovr":80,"atq":40,"def":80,"cri":50,"fis":75},{"num":15,"nome":"Tite","pos":"LW/RW","ovr":81,"atq":81,"def":45,"cri":50,"fis":78},{"num":16,"nome":"Pag\u00e3o","pos":"ST","ovr":84,"atq":84,"def":45,"cri":50,"fis":81},{"num":17,"nome":"Toninho Guerreiro","pos":"ST","ovr":82,"atq":82,"def":45,"cri":50,"fis":79}]},{"id":1,"time":"Cruzeiro","ano":"1966","cor":"#0047ab","texto_cor":"#ffffff","estilo":"Transi\u00e7\u00e3o Ofensiva e Toque T\u00e9cnico","jogadores":[{"num":1,"nome":"Raul Plassmann","pos":"GK","ovr":85,"atq":40,"def":85,"cri":50,"fis":82},{"num":2,"nome":"Pedro Paulo","pos":"RB","ovr":81,"atq":40,"def":81,"cri":81,"fis":78},{"num":3,"nome":"William","pos":"CB","ovr":84,"atq":40, "def":84,"cri":50,"fis":81},{"num":4,"nome":"Proc\u00f3pio","pos":"CB","ovr":85,"atq":40,"def":85,"cri":50,"fis":82},{"num":6,"nome":"Neco","pos":"LB","ovr":82,"atq":40,"def":82,"cri":82,"fis":79},{"num":5,"nome":"Piazza","pos":"CDM/CB","ovr":89,"atq":40,"def":89,"cri":50,"fis":86},{"num":8,"nome":"Dirceu Lopes","pos":"CAM/CM","ovr":91,"atq":91,"def":45,"cri":91,"fis":88},{"num":7,"nome":"Natal","pos":"RW/RM","ovr":83,"atq":83,"def":45,"cri":50,"fis":80},{"num":10,"nome":"Tost\u00e3o","pos": "ST/CAM","ovr":93,"atq":93,"def":45,"cri":93,"fis":90},{"num":9,"nome":"Evaldo","pos":"ST","ovr":82,"atq":82,"def":45,"cri":50,"fis":79},{"num":11,"nome":"Hilton Oliveira","pos":"LW","ovr":80,"atq":80,"def":45,"cri":50,"fis":75},{"num":12,"nome":"Tonho","pos":"GK","ovr":75,"atq":40,"def":75,"cri":50,"fis":75},{"num":13,"nome":"Vanderlei","pos":"CB","ovr":76,"atq":40,"def":76,"cri":50,"fis":75},{"num":14,"nome":"Claudio Deodato","pos":"RB","ovr":75,"atq":40,"def":75,"cri":75,"fis":75},{"num":15, "nome":"Z\u00e9 Carlos","pos":"CM/CDM","ovr":79,"atq":40,"def":79,"cri":79,"fis":75},{"num":16,"nome":"Dalmar","pos":"CM","ovr":76,"atq":40,"def":45,"cri":76,"fis":75},{"num":17,"nome":"Marco Ant\u00f4nio","pos":"LW/RW","ovr":74,"atq":74,"def":45,"cri":50,"fis":75}]},{"id":2,"time":"Internacional","ano":"1976","cor":"#e31837","texto_cor":"#ffffff","estilo":"Rolo Compressor e For\u00e7a F\u00edsica","jogadores":[{"num":1,"nome":"Manga","pos":"GK","ovr":89,"atq":40,"def":89,"cri":50,"fis":86},{"num":2,"nome":"Cl\u00e1udio Duarte","pos":"RB","ovr":81,"atq":40,"def":81,"cri":81,"fis":78},{"num":3,"nome":"Figueroa","pos":"CB","ovr":94,"atq":40,"def":94,"cri":50,"fis":91},{"num":4,"nome":"Marinho Peres","pos":"CB","ovr":85,"atq":40,"def":85,"cri":50,"fis":82},{"num":6,"nome":"Vacaria","pos":"LB","ovr":82,"atq":40,"def":82,"cri":82,"fis":79},{"num":5,"nome":"Ca\u00e7apava","pos":"CDM","ovr":85,"atq":40,"def":85,"cri":50,"fis":82},{"num":8,"nome":"Falc\u00e3o","pos":"CM/CDM","ovr":93,"atq":40,"def":93,"cri":93,"fis":90},{"num":11,"nome":"Batista","pos":"CM/CDM","ovr":83,"atq":40,"def":83,"cri":83,"fis":80},{"num":7,"nome":"Valdomiro","pos":"RW/RM","ovr":85,"atq":85,"def":45,"cri":85,"fis":82},{"num":9,"nome":"Dad\u00e1 Maravilha","pos":"ST","ovr":86,"atq":86,"def":45,"cri":50,"fis":83},{"num":10,"nome":"Lula","pos":"LW/LM","ovr":82,"atq":82,"def":45,"cri":50,"fis":79},{"num":12,"nome":"Gasparin","pos":"GK","ovr":74,"atq":40,"def":74,"cri":50,"fis":75},{"num":13,"nome":"Herm\u00ednio","pos":"CB","ovr":77,"atq":40,"def":77,"cri":50,"fis":75},{"num":14,"nome":"Santos","pos":"RB/LB","ovr":75,"atq":40,"def":75,"cri":75,"fis":75},{"num":15,"nome":"Valdir","pos":"CDM","ovr":76,"atq":40,"def":76,"cri":50,"fis":75},{"num":16,"nome":"Jair","pos":"CAM/CM","ovr":80,"atq":80,"def":45,"cri":80,"fis":75},{"num":17,"nome":"Escurinho","pos":"ST","ovr":81,"atq":81,"def":45,"cri":50,"fis":78}]},{"id":3,"time":"Flamengo","ano":"1981","cor":"#cc0000","texto_cor": "#000000","estilo":"Futebol Arte e Ultrapassagens Mortais","jogadores":[{"num":1,"nome":"Raul Plassmann","pos":"GK","ovr":86,"atq":40,"def":86,"cri":50,"fis":83},{"num":2,"nome":"Leandro","pos":"RB/CB","ovr":91,"atq":40,"def":91,"cri":91,"fis":88},{"num":3,"nome":"Marinho","pos":"CB","ovr":84,"atq":40,"def":84,"cri":50,"fis":81},{"num":4,"nome":"Mozer","pos":"CB","ovr":88,"atq":40,"def":88,"cri":50,"fis":85},{"num":6,"nome":"J\u00fanior","pos":"LB/CM/CDM","ovr":92,"atq":40,"def":92,"cri":92,"fis":89},{"num":5,"nome":"Andrade","pos":"CDM","ovr":89,"atq":40,"def":89,"cri":50,"fis":86},{"num":8,"nome":"Ad\u00edlio","pos":"CM","ovr":90,"atq":40,"def":45,"cri":90,"fis":87},{"num":7,"nome":"Tita","pos":"RW/RM/CAM","ovr":85,"atq":85,"def":45,"cri":85,"fis":82},{"num":10,"nome":"Zico","pos":"CAM/ST","ovr":97,"atq":97,"def":45,"cri":97,"fis":94},{"num":9,"nome":"Nunes","pos":"ST","ovr":85,"atq":85,"def":45,"cri":50,"fis":82},{"num":11,"nome":"Lico","pos":"LW/LM","ovr":84,"atq":84,"def":45,"cri":50,"fis":81},{"num":12,"nome":"Cantarele","pos":"GK","ovr":76,"atq":40,"def":76,"cri":50,"fis":75},{"num":13,"nome":"Figueiredo","pos":"CB","ovr":78,"atq":40,"def":78,"cri":50,"fis":75},{"num":14,"nome":"Vitor","pos":"CDM","ovr":75,"atq":40,"def":75,"cri":50,"fis":75},{"num":15,"nome":"Peu","pos":"CAM","ovr":78,"atq":78,"def":45,"cri":78,"fis":75},{"num":16,"nome":"Baroninho","pos":"LW","ovr":80,"atq":80,"def":45,"cri":50,"fis":75},{"num":17,"nome":"Anselmo","pos":"ST","ovr":77,"atq":77,"def":45,"cri":50,"fis":75}]},{"id":4,"time":"Napoli","ano":"1989","cor":"#4169e1","texto_cor":"#ffffff","estilo":"Magia de Diego e Ataque Implac\u00e1vel","jogadores":[{"num":1,"nome":"G. Giuliani","pos":"GK","ovr":83,"atq":40,"def":83,"cri":50,"fis":80},{"num":2,"nome":"Ciro Ferrara","pos":"CB/RB","ovr":88,"atq":40,"def":88,"cri":88,"fis":85},{"num":3,"nome":"A. Renica","pos":"CB","ovr":83,"atq":40,"def":83,"cri":50,"fis":80},{"num":4,"nome":"G. Corradini","pos":"CB","ovr":82,"atq":40,"def":82,"cri":50,"fis":79},{"num":6,"nome":"G. Francini","pos":"LB","ovr":83,"atq":40,"def":83,"cri":83,"fis":80},{"num":5,"nome":"Alem\u00e3o","pos":"CDM/CM","ovr":86,"atq":40,"def":86,"cri":86,"fis":83},{"num":8,"nome":"F. De Napoli","pos":"CM/CDM","ovr":84,"atq":40,"def":84,"cri":84,"fis":81},{"num":7,"nome":"Luca Fusi","pos":"CM","ovr":81,"atq":40,"def":45,"cri":81,"fis":78},{"num":10,"nome":"Diego Maradona","pos":"CAM/ST/RW","ovr":98,"atq":98,"def":45,"cri":98,"fis":95},{"num":9,"nome":"Careca","pos":"ST","ovr":91,"atq":91,"def":45,"cri":50,"fis":88},{"num":11,"nome":"A. Carnevale","pos":"ST/LW","ovr":83,"atq":83,"def":45,"cri":50,"fis":80},{"num":12,"nome": "R. Di Fusco","pos":"GK","ovr":74,"atq":40,"def":74,"cri":50,"fis":75},{"num":13,"nome":"T. Bigliardi","pos":"CB","ovr":75,"atq":40,"def":75,"cri":50,"fis":75},{"num":14,"nome":"A. Carannante","pos":"LB","ovr":74,"atq":40,"def":74,"cri":74,"fis":75},{"num":15,"nome":"Massimo Crippa","pos":"CM/RM","ovr":79,"atq":40,"def":45,"cri":79,"fis":75},{"num":16,"nome":"Gianfranco Zola","pos":"CAM/ST","ovr":84,"atq":84,"def":45,"cri":84,"fis":81},{"num":17,"nome":"Marco Ferrante","pos":"ST","ovr":73,"atq":73,"def":45,"cri":50,"fis":75}]},{"id":5,"time":"Barcelona","ano":"2015","cor":"#004d98","texto_cor":"#a50044","estilo":"Trio MSN e Ataque Demolidor","jogadores":[{"num":1,"nome":"ter Stegen","pos":"GK","ovr":87,"atq":40,"def":87,"cri":50,"fis":84},{"num":2,"nome":"Dani Alves","pos":"RB","ovr":88,"atq":40,"def":88,"cri":88,"fis":85},{"num":3,"nome":"Piqu\u00e9","pos":"CB","ovr":88,"atq":40,"def":88,"cri":50,"fis":85},{"num":14,"nome":"Mascherano","pos":"CB/CDM","ovr":86,"atq":40,"def":86,"cri":50,"fis":83},{"num":18,"nome":"Jordi Alba","pos":"LB","ovr":86,"atq":40,"def":86,"cri":86,"fis":83},{"num":5,"nome":"Busquets","pos":"CDM","ovr":89,"atq":40,"def":89,"cri":50,"fis":86},{"num":4,"nome":"Rakitic","pos":"CM","ovr":86,"atq":40,"def":45,"cri":86,"fis":83},{"num":8,"nome":"Iniesta","pos":"CM/CAM/LW","ovr":91,"atq":91,"def":45,"cri":91,"fis":88},{"num":10,"nome":"Messi","pos":"RW/CAM/ST","ovr":98,"atq":98,"def":45,"cri":98,"fis":95},{"num":9,"nome":"Su\u00e1rez","pos":"ST","ovr":94,"atq":94,"def":45,"cri":50,"fis":91},{"num":11,"nome":"Neymar Jr","pos":"LW/LM","ovr":93,"atq":93,"def":45,"cri":93,"fis":90},{"num":12,"nome":"Bravo","pos":"GK","ovr":85,"atq":35,"def":85,"cri":45,"fis":74},{"num":13,"nome":"Bartra","pos":"CB","ovr":77,"atq":35,"def":77,"cri":45,"fis":74},{"num":21,"nome":"Adriano","pos":"LB/RB","ovr":78,"atq":35,"def":78,"cri":45,"fis":74},{"num":6,"nome":"Xavi","pos":"CM","ovr":85,"atq":35,"def":40,"cri":85,"fis":74},{"num":12,"nome":"Rafinha","pos":"CM/CAM","ovr":80,"atq":80,"def":45,"cri":80,"fis":75},{"num":7,"nome":"Pedro","pos":"RW/LW","ovr":81,"atq":81,"def":45,"cri":50,"fis":78}]},{"id":6,"time":"Real Madrid","ano":"2017","cor":"#ffffff","texto_cor":"#002040","estilo":"O Tri Lend\u00e1rio da Champions de Zidane","jogadores":[{"num":1,"nome":"Keylor Navas","pos":"GK","ovr":87,"atq":40,"def":87,"cri":50,"fis":84},{"num":2,"nome":"Dani Carvajal","pos":"RB","ovr":86,"atq":40,"def":86,"cri":86,"fis":83},{"num":4,"nome":"Sergio Ramos","pos":"CB/RB","ovr":91,"atq":40,"def":91,"cri":91,"fis":88},{"num":5,"nome":"Rapha\u00ebl Varane","pos":"CB","ovr":87,"atq":40,"def":87,"cri":50,"fis":84},{"num":12,"nome":"Marcelo","pos":"LB/LM/LW","ovr":91,"atq":91,"def":91,"cri":91,"fis":88},{"num":14,"nome":"Casemiro","pos":"CDM","ovr":90,"atq":40,"def":90,"cri":50,"fis":87},{"num":8,"nome":"Toni Kroos","pos":"CM","ovr":92,"atq":40,"def":45,"cri":92,"fis":89},{"num":19,"nome":"Luka Modric","pos":"CM","ovr":93,"atq":40,"def":45,"cri":93,"fis":90},{"num":22,"nome":"Isco","pos":"CAM/CM","ovr":87,"atq":87,"def":45,"cri":87,"fis":84},{"num":9,"nome":"Karim Benzema","pos":"ST","ovr":89,"atq":89,"def":45,"cri":50,"fis":86},{"num":7,"nome":"C. Ronaldo","pos":"LW/ST","ovr":96,"atq":96,"def":45,"cri":50,"fis":93},{"num":13,"nome":"Kiko Casilla","pos":"GK","ovr":76,"atq":40,"def":76,"cri":50,"fis":75},{"num":6,"nome":"Nacho","pos":"CB/LB/RB","ovr":81,"atq":40,"def":81,"cri":81,"fis":78},{"num":16,"nome":"Mateo Kovacic","pos":"CM/CDM","ovr":81,"atq":40,"def":81,"cri":81,"fis":78},{"num":10,"nome":"James Rodr\u00edguez","pos":"CAM","ovr":83,"atq":83,"def":45,"cri":83,"fis":80},{"num":20,"nome":"Marco Asensio","pos":"LW/RW/CAM","ovr":82,"atq":82,"def":45,"cri":82,"fis":79},{"num":11,"nome":"Gareth Bale","pos":"RW/LW/ST","ovr":86,"atq":86,"def":45,"cri":50,"fis":83}]},{"id":7,"time":"Liverpool","ano":"2019","cor":"#cc0000","texto_cor":"#ffffff","estilo":"Gegenpressing de Klopp e Velocidade M\u00e1xima","jogadores":[{"num":1,"nome":"Alisson","pos":"GK","ovr":89,"atq":40,"def":89,"cri":50,"fis":86},{"num":24,"nome":"Alexander-Arnold","pos":"RB/RM","ovr":87,"atq":40,"def":87,"cri":87,"fis":84},{"num":32,"nome":"Joel Matip","pos":"CB","ovr":84,"atq":40,"def":84,"cri":50,"fis":81},{"num":4,"nome":"van Dijk","pos":"CB","ovr":93,"atq":40,"def":93,"cri":50,"fis":90},{"num":26,"nome":"Robertson","pos":"LB","ovr":86,"atq":40,"def":86,"cri":86,"fis":83},{"num":3,"nome":"Fabinho","pos":"CDM","ovr":87,"atq":40,"def":87,"cri":50,"fis":84},{"num":7,"nome":"Henderson","pos":"CM/CDM","ovr":84,"atq":40,"def":84,"cri":84,"fis":81},{"num":8,"nome":"Milner","pos":"CM/LB/RB","ovr":81,"atq":40,"def":81,"cri":81,"fis":78},{"num":9,"nome":"Salah","pos":"RW/RM/ST","ovr":92,"atq":92,"def":45,"cri":92,"fis":89},{"num":10,"nome":"Man\u00e9","pos":"LW/LM/ST","ovr":90,"atq":90,"def":45,"cri":90,"fis":87},{"num":11,"nome":"Firmino","pos":"ST/CAM","ovr":87,"atq":87,"def":45,"cri":87,"fis":84},{"num":12,"nome":"Mignolet","pos":"GK","ovr":75,"atq":40,"def":75,"cri":50,"fis":75},{"num":13,"nome":"Gomez","pos":"CB/RB","ovr":79,"atq":40,"def":79,"cri":79,"fis":75},{"num":14,"nome":"Wijnaldum","pos":"CM/CDM","ovr":84,"at
